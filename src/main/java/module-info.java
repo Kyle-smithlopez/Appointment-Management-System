@@ -6,4 +6,6 @@ module com.example.scheduler {
 
     opens Smith.scheduler to javafx.fxml;
     exports Smith.scheduler;
+    exports controllers;
+    opens controllers to javafx.fxml;
 }
