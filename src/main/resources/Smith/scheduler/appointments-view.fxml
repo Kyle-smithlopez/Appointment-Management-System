@@ -13,8 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="860.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="860.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AppointmentsController">
    <children>
       <Label layoutX="15.0" layoutY="18.0" text="Appointments">
          <font>
@@ -69,19 +68,19 @@
          <children>
             <GridPane prefHeight="56.0" prefWidth="416.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="118.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0" prefWidth="51.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="67.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="47.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="68.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.0" minWidth="10.0" prefWidth="101.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="97.0" minWidth="10.0" prefWidth="75.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" text="Reports" />
-                  <Button mnemonicParsing="false" text="Add" GridPane.columnIndex="1" />
-                  <Button mnemonicParsing="false" text="Modify" GridPane.columnIndex="2" />
-                  <Button mnemonicParsing="false" text="Delete" GridPane.columnIndex="3" />
+                  <Button mnemonicParsing="false" onAction="#OnActionAddApptBtn" text="Add" />
+                  <Button mnemonicParsing="false" onAction="#OnActionModifyApptBtn" text="Modify" GridPane.columnIndex="1" />
+                  <Button mnemonicParsing="false" onAction="#OnActionDeleteApptBtn" text="Delete" GridPane.columnIndex="2" />
+                  <Button mnemonicParsing="false" onAction="#OnActionBackBtn" text="Back" GridPane.columnIndex="3" />
                </children>
             </GridPane>
          </children>
