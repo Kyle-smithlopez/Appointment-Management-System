@@ -7,15 +7,44 @@ public class Customers {
     private String customerAddress;
     private String postalCode;
     private String phone;
+    private String division;
+    private String country;
+    public int divisionID;
 
-    public Customers(int customerId, String customerName, String customerAddress, String postalCode, String phone) {
+    public Customers(int customerId, String customerName, String customerAddress, String postalCode, String phone, int divisionID, String division) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerAddress = customerAddress;
         this.postalCode = postalCode;
         this.phone = phone;
+        this.divisionID = divisionID;
+        this.division = division;
+//        this.country = country;
     }
 
+    public int getDivision_ID() {
+        return divisionID;
+    }
+
+    public void setDivision_ID(int divisionID) {
+        this.divisionID = divisionID;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getDivision() {
+        return division;
+    }
+
+    public void setDivision(String division) {
+        this.division = division;
+    }
 
     public int getCustomerId() {
         return customerId;
