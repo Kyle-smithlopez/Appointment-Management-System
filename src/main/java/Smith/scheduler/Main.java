@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("customers-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/view/customers-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
         stage.setTitle("Appointment Management System");
         stage.setScene(scene);
@@ -32,31 +32,9 @@ public class Main extends Application {
 //        stage.show();
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws Exception{
         JDBC.openConnection();
 //        Locale.setDefault(new Locale("fr"));
-//        try {
-//            ResourceBundle rb = ResourceBundle.getBundle("Language", Locale.getDefault());
-//            if (Locale.getDefault().getLanguage().equals("fr") || Locale.getDefault().getLanguage().equals("en"))
-//                System.out.println(rb.getString("hello") + " " + rb.getString("world"));
-//        }
-//
-//        catch(MissingResourceException e) {
-//                System.out.println("Resource file missing: " + e);
-//
-//        }
-
-//        int rowsAffected = Query.insert("Cherries", 1);
-//        int rowsAffected = Query.update("Cherries", 1);
-//        if(rowsAffected > 0) {
-//            System.out.println("Insert Successful");
-//        } else {
-//            System.out.println("Insert Failed");
-//        }
-//        Query.select();
-
-//        System.out.println(ZoneId.systemDefault());
-//        ZoneId.getAvailableZoneIds().stream().filter(z->z.contains("America")).sorted().forEach(System.out::println);
         launch();
         JDBC.closeConnection();
 

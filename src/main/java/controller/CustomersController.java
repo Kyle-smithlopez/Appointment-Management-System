@@ -1,7 +1,7 @@
-package controllers;
+package controller;
 
-import DAO.CountryDao;
 import DAO.CustomerDAO;
+import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,9 +21,8 @@ import model.Customers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CustomersController implements Initializable {
 
@@ -47,17 +46,36 @@ public class CustomersController implements Initializable {
     Stage stage;
     Parent scene;
 
+    public void refreshTableView() throws Exception {
+        // Clear the current list of customers
+        Customers.clear();
+
+        // Open a connection to the database
+        JDBC.openConnection();
+
+        // Retrieve the list of customers from the database
+        Customers = CustomerDAO.getAllCustomers();
+
+        // Close the connection to the database
+        JDBC.closeConnection();
+
+        // Set the items in the table view to the list of customers
+        custTableView.setItems(Customers);
+    }
+
+
     @FXML
     public void OnActionAddCustBtn(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/add-customer-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/add-customer-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }
+
     @FXML
     public void OnActionModifyCustBtn(ActionEvent event) throws IOException {
 
-        if(custTableView.getSelectionModel().getSelectedItem() == null) {
+        if (custTableView.getSelectionModel().getSelectedItem() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning Dialog");
             alert.setContentText("Error: No Customer Selected");
@@ -65,7 +83,7 @@ public class CustomersController implements Initializable {
         } else {
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/Smith/scheduler/modify-customer-view.fxml"));
+            loader.setLocation(getClass().getResource("/view/modify-customer-view.fxml"));
             loader.load();
 
             ModifyCustomerController MCController = loader.getController();
@@ -78,13 +96,52 @@ public class CustomersController implements Initializable {
         }
 
     }
+
     @FXML
-    public void OnActionDeleteCustBtn(ActionEvent event) {
+    public void OnActionDeleteCustBtn(ActionEvent event) throws Exception {
+        // Check if a customer is selected in the table view
+        if (custTableView.getSelectionModel().getSelectedItem() == null) {
+            // Display warning message if no customer is selected
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning Dialog");
+            alert.setContentText("Error: No Customer Selected");
+            alert.showAndWait();
+        } else {
+            // Open a connection to the database
+//            JDBC.openConnection();
+
+            // Retrieve the selected customer's ID
+            int customerId = custTableView.getSelectionModel().getSelectedItem().getCustomerId();
+
+            // Try to delete the customer from the database
+            boolean success = CustomerDAO.deleteCustomer(customerId);
+            if (success) {
+                // Display message to user indicating successful deletion of customer
+                System.out.println("Customer deleted successfully");
+
+                // Refresh the table view to reflect the changes
+                refreshTableView();
+            } else {
+                // Display error message to user
+                System.out.println("Error deleting customer");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setContentText("An error occurred while deleting the customer. Please try again.");
+                alert.showAndWait();
+            }
+
+            // Close the connection to the database
+//            JDBC.closeConnection();
+        }
     }
+
+
+
     @FXML
     public void OnActionBackBtn(ActionEvent event) throws IOException {
+//        JDBC.closeConnection();
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/main-menu-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/main-menu-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }
@@ -102,7 +159,6 @@ public class CustomersController implements Initializable {
         FLDCol.setCellValueFactory(new PropertyValueFactory<>("division"));
         countryCol.setCellValueFactory(new PropertyValueFactory<>("country"));
         postalCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
-
 
 
         try {

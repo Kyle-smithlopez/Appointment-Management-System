@@ -1,4 +1,4 @@
-package controllers;
+package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,14 +20,14 @@ public class AppointmentsController implements Initializable {
     @FXML
     public void OnActionAddApptBtn(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/add-appointment-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/add-appointment-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }
     @FXML
     public void OnActionModifyApptBtn(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/modify-appointment-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/modify-appointment-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }
@@ -38,7 +37,7 @@ public class AppointmentsController implements Initializable {
     @FXML
     public void OnActionBackBtn(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/main-menu-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/main-menu-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }

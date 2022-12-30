@@ -1,4 +1,4 @@
-package controllers;
+package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -59,14 +59,14 @@ public class ModifyCustomerController implements Initializable {
     @FXML
     public void OnActionSaveBtn(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/customers-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/customers-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }
     @FXML
     public void OnActionCancel(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/customers-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/customers-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }

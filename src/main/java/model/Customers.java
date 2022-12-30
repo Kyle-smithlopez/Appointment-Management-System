@@ -2,7 +2,7 @@ package model;
 
 public class Customers {
 
-    private int customerId;
+    private Integer customerId = null;
     private String customerName;
     private String customerAddress;
     private String postalCode;
@@ -11,7 +11,7 @@ public class Customers {
     private String country;
     public int divisionID;
 
-    public Customers(int customerId, String customerName, String customerAddress, String postalCode, String phone, int divisionID, String division) {
+    public Customers(int customerId, String customerName, String customerAddress, String postalCode, String phone, int divisionID, String division, String country) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerAddress = customerAddress;
@@ -19,7 +19,7 @@ public class Customers {
         this.phone = phone;
         this.divisionID = divisionID;
         this.division = division;
-//        this.country = country;
+        this.country = country;
     }
 
     public int getDivision_ID() {

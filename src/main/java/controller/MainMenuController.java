@@ -1,4 +1,4 @@
-package controllers;
+package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,14 +17,14 @@ public class MainMenuController {
     @FXML
     public void OnActionAppointments(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/appointments-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/appointments-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }
     @FXML
     public void OnActionCustomers(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/customers-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/customers-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }
@@ -34,7 +34,7 @@ public class MainMenuController {
     @FXML
     public void OnActionLogout(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/login-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/login-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }

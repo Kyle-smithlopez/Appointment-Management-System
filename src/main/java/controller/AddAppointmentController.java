@@ -1,4 +1,4 @@
-package controllers;
+package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,22 +13,21 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ModifyAppointmentController implements Initializable {
+public class AddAppointmentController implements Initializable {
     Stage stage;
     Parent scene;
-
 
     @FXML
     public void OnActionSaveAppt(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/appointments-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/appointments-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }
     @FXML
     public void OnActionCancel(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/appointments-view.fxml"));
+        scene = FXMLLoader.load(getClass().getResource("/view/appointments-view.fxml"));
         stage.setScene(new Scene(scene));
         stage.show();
     }
@@ -37,5 +36,4 @@ public class ModifyAppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
-
 }

@@ -1,4 +1,4 @@
-package controllers;
+package controller;
 
 import DAO.UserDAO;
 import javafx.event.ActionEvent;
@@ -58,7 +58,7 @@ public class LoginController implements Initializable {
             if (userId > 0) {
 
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-                scene = FXMLLoader.load(getClass().getResource("/Smith/scheduler/main-menu-view.fxml"));
+                scene = FXMLLoader.load(getClass().getResource("/view/main-menu-view.fxml"));
                 stage.setScene(new Scene(scene));
                 stage.show();
             }
@@ -117,5 +117,6 @@ public class LoginController implements Initializable {
         {
             System.out.println(e);
         }
+        return;
     }
 }

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="500.0" prefWidth="506.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AddCustomerController">
+<AnchorPane prefHeight="500.0" prefWidth="506.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddCustomerController">
    <children>
       <Label layoutX="40.0" layoutY="32.0" text="Add Customer">
          <font>
@@ -35,7 +35,7 @@
                   <Label text="Address" GridPane.rowIndex="3" />
                   <Label text="Postal Code" GridPane.rowIndex="4" />
                   <Label text="Country" GridPane.rowIndex="5" />
-                  <TextField fx:id="custIdTxt" disable="true" GridPane.columnIndex="1" />
+                  <TextField fx:id="custIdTxt" disable="true" promptText="Auto-Generated" GridPane.columnIndex="1" />
                   <TextField fx:id="nameTxt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="phoneTxt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <TextField fx:id="addressTxt" GridPane.columnIndex="1" GridPane.rowIndex="3" />

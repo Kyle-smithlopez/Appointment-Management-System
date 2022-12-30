@@ -53,20 +53,6 @@ public class Query {
         }
     }
 
-//    public static void select(int UserId) throws SQLException {
-//        String sql = "SELECT * FROM USERS WHERE User_ID = ?";
-//        PreparedStatement ps = connection.prepareStatement(sql);
-//        ps.setInt(1,UserId);
-//        ResultSet rs = ps.executeQuery();
-//        while(rs.next()) {
-//            int userId = rs.getInt("User_ID");
-//            String userName = rs.getString("User_Name");
-//            int userIdFK = rs.getInt("User_ID");
-//            System.out.println(userId + " " + userName);
-//        }
-//    }
-
-
     public static void makeQuery(String q){
         query = q;
         try{
