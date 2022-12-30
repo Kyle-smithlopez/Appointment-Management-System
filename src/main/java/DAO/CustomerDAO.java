@@ -53,29 +53,56 @@ public abstract class CustomerDAO {
         }
     }
 
-    public static Boolean updateCustomer(int custId, String custName, String address, String postalCode, String Phone, int divisionId) throws SQLException {
+//    public static Boolean updateCustomer(int custId, String custName, String address, String postalCode, String Phone, int divisionId) throws SQLException {
+//
+//        JDBC.openConnection();
+//
+//        String sql = "UPDATE CUSTOMERS (Customer_ID, Customer_Name, Address, Postal_Code, Phone, divisionId) VALUES(?, ?, ?, ?, ?, ?)";
+//        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+//        ps.setInt(1, custId);
+//        ps.setString(2, custName);
+//        ps.setString(3, address);
+//        ps.setString(4, postalCode);
+//        ps.setString(5, Phone);
+//        ps.setInt(5, divisionId);
+//
+//        try {
+//            ps.executeUpdate();
+//            JDBC.closeConnection();
+//            return true;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            JDBC.closeConnection();
+//            return false;
+//        }
+//    }
+
+    public static boolean updateCustomer(int custId, String custName, String address, String postalCode, String phone, int divisionId) throws SQLException {
+        String sql = "UPDATE CUSTOMERS SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Customer_ID = ?";
 
         JDBC.openConnection();
-
-        String sql = "UPDATE CUSTOMERS (Customer_ID, Customer_Name, Address, Postal_Code, Phone, divisionId) VALUES(?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setInt(1, custId);
-        ps.setString(2, custName);
-        ps.setString(3, address);
-        ps.setString(4, postalCode);
-        ps.setString(5, Phone);
+        ps.setString(1, custName);
+        ps.setString(2, address);
+        ps.setString(3, postalCode);
+        ps.setString(4, phone);
         ps.setInt(5, divisionId);
+        ps.setInt(6, custId);
 
         try {
-            ps.executeUpdate();
+            // Use executeUpdate to execute the UPDATE statement
+            int rowsAffected = ps.executeUpdate();
             JDBC.closeConnection();
-            return true;
+            // Return true if the UPDATE statement was successful (1 or more rows were affected)
+            return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             JDBC.closeConnection();
+            // Return false if the UPDATE statement failed
             return false;
         }
     }
+
 
     public static ObservableList<Customers> getAllCustomers() throws SQLException, Exception {
         ObservableList<Customers> allCustomers = FXCollections.observableArrayList();

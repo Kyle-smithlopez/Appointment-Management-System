@@ -76,7 +76,6 @@ public class AddCustomerController implements Initializable {
             alert.setContentText("Please enter a valid value for each Text Field.");
             alert.showAndWait();
         }
-        // Close the connection to the database
     }
 
 

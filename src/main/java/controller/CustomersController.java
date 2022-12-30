@@ -10,10 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Countries;
@@ -22,6 +19,7 @@ import model.Customers;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CustomersController implements Initializable {
@@ -94,8 +92,8 @@ public class CustomersController implements Initializable {
             stage.setScene(new Scene(scene));
             stage.show();
         }
-
     }
+
 
     @FXML
     public void OnActionDeleteCustBtn(ActionEvent event) throws Exception {
@@ -107,34 +105,30 @@ public class CustomersController implements Initializable {
             alert.setContentText("Error: No Customer Selected");
             alert.showAndWait();
         } else {
-            // Open a connection to the database
-//            JDBC.openConnection();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this customer?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // Retrieve the selected customer's ID
+                int customerId = custTableView.getSelectionModel().getSelectedItem().getCustomerId();
 
-            // Retrieve the selected customer's ID
-            int customerId = custTableView.getSelectionModel().getSelectedItem().getCustomerId();
-
-            // Try to delete the customer from the database
-            boolean success = CustomerDAO.deleteCustomer(customerId);
-            if (success) {
-                // Display message to user indicating successful deletion of customer
-                System.out.println("Customer deleted successfully");
-
-                // Refresh the table view to reflect the changes
-                refreshTableView();
-            } else {
-                // Display error message to user
-                System.out.println("Error deleting customer");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Dialog");
-                alert.setContentText("An error occurred while deleting the customer. Please try again.");
-                alert.showAndWait();
+                // Try to delete the customer from the database
+                boolean success = CustomerDAO.deleteCustomer(customerId);
+                if (success) {
+                    // Display message to user indicating successful deletion of customer
+                    System.out.println("Customer deleted successfully");
+                    // Refresh the table view to reflect the changes
+                    refreshTableView();
+                } else {
+                    // Display error message to user
+                    System.out.println("Error deleting customer");
+                    Alert error = new Alert(Alert.AlertType.ERROR);
+                    error.setTitle("Error Dialog");
+                    error.setContentText("An error occurred while deleting the customer. Please try again.");
+                    error.showAndWait();
+                }
             }
-
-            // Close the connection to the database
-//            JDBC.closeConnection();
         }
     }
-
 
 
     @FXML
