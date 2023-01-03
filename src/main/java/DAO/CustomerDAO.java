@@ -53,6 +53,7 @@ public abstract class CustomerDAO {
         }
     }
 
+    //Need to work on this 1/3/2023
 //    public static Boolean updateCustomer(int custId, String custName, String address, String postalCode, String Phone, int divisionId) throws SQLException {
 //
 //        JDBC.openConnection();
@@ -126,5 +127,39 @@ public abstract class CustomerDAO {
         }
         JDBC.closeConnection();
         return allCustomers;
+    }
+
+    public static ObservableList<String> getCustomers() throws SQLException {
+
+        ObservableList<String> allCustomers = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM CUSTOMERS";
+        JDBC.openConnection();
+        Query.makeQuery(sql);
+        ResultSet rs = Query.getResult();
+
+        while (rs.next()) {
+            String name = rs.getString("Customer_Name");
+//            String custId = rs.getString("Customer_ID");
+            int custId = rs.getInt("Customer_ID");
+//            allCustomers.add(name + " " + custId);
+
+            allCustomers.add(String.valueOf(custId));
+        }
+        JDBC.closeConnection();
+        return allCustomers;
+    }
+
+    public static int getCustomerId(String custId) throws SQLException {
+        int customerId = -1;
+        JDBC.openConnection();
+        String sql = "SELECT CUSTOMER_ID FROM CUSTOMERS WHERE CUSTOMER_NAME = ?";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setString(1, custId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            customerId = rs.getInt("CUSTOMER_ID");
+        }
+        JDBC.closeConnection();
+        return customerId;
     }
 }

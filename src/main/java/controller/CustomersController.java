@@ -18,7 +18,6 @@ import model.Customers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -133,7 +132,6 @@ public class CustomersController implements Initializable {
 
     @FXML
     public void OnActionBackBtn(ActionEvent event) throws IOException {
-//        JDBC.closeConnection();
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource("/view/main-menu-view.fxml"));
         stage.setScene(new Scene(scene));
@@ -154,15 +152,12 @@ public class CustomersController implements Initializable {
         countryCol.setCellValueFactory(new PropertyValueFactory<>("country"));
         postalCol.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
 
-
         try {
             Customers.addAll(CustomerDAO.getAllCustomers());
 
         } catch (Exception e) {
             System.out.println(e);
         }
-
         custTableView.setItems(Customers);
-
     }
 }

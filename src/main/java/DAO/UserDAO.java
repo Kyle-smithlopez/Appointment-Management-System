@@ -1,6 +1,8 @@
 package DAO;
 
 import helper.JDBC;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,7 +55,37 @@ public class UserDAO {
         }
     }
 
+    public static ObservableList<String> getUsers() throws SQLException {
 
+        ObservableList<String> allUsers = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM USERS";
+        JDBC.openConnection();
+        Query.makeQuery(sql);
+        ResultSet rs = Query.getResult();
 
+        while (rs.next()) {
+            int id = rs.getInt("User_ID");
+//            String id = rs.getString("User_ID");
+            String name = rs.getString("User_Name");
+//            allUsers.add(name + " [" + id + "]");
+            allUsers.add(String.valueOf(id));
+        }
+        JDBC.closeConnection();
+        return allUsers;
+    }
+
+    public static int getUserId(String userName) throws SQLException {
+        int userId = -1;
+        JDBC.openConnection();
+        String sql = "SELECT USER_ID FROM USERS WHERE USER_NAME = ?";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setString(1, userName);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            userId = rs.getInt("USER_ID");
+        }
+        JDBC.closeConnection();
+        return userId;
+    }
 
 }

@@ -1,8 +1,13 @@
 package model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Appointments {
     private int apptId;
@@ -15,9 +20,33 @@ public class Appointments {
     public int custId;
     public int userId;
     public int contactId;
+    public String custName;
+    public String userName;
+    public String contactName;
 
+    public String getCustName() {
+        return custName;
+    }
 
+    public void setCustName(String custName) {
+        this.custName = custName;
+    }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
 
     public Appointments(int apptId, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int custId, int userId, int contactId) {
 
