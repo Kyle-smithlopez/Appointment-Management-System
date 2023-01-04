@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public abstract class CustomerDAO {
-
+    //Create
     public static boolean addCustomer(String custName, String address, String postalCode, String Phone, int divisionId) throws SQLException {
         JDBC.openConnection();
         String sql = "INSERT INTO CUSTOMERS (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES(?, ?, ?, ?, ?)";
@@ -35,7 +35,7 @@ public abstract class CustomerDAO {
         }
     }
 
-
+    //Deletion
     public static Boolean deleteCustomer(int custId) throws SQLException {
         JDBC.openConnection();
         String sql = "DELETE FROM CUSTOMERS WHERE CUSTOMER_ID = ?";
@@ -52,32 +52,27 @@ public abstract class CustomerDAO {
             return false;
         }
     }
+    //Checks if Customer has an appointment.
+    public static boolean hasAppointments(int customerId) throws SQLException {
+        // Open a connection to the database
+        JDBC.openConnection();
+        // Check if there are any appointments associated with the customer
+        String sql = "SELECT COUNT(*) FROM appointments WHERE CUSTOMER_ID = ?";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setInt(1, customerId);
+        ResultSet rs = ps.executeQuery();
+        int count = 0;
+        if (rs.next()) {
+            count = rs.getInt(1);
+        }
+        // Close the connection to the database
+        JDBC.closeConnection();
+        // Return true if there are appointments associated with the customer, false otherwise
+        return count > 0;
+    }
 
-    //Need to work on this 1/3/2023
-//    public static Boolean updateCustomer(int custId, String custName, String address, String postalCode, String Phone, int divisionId) throws SQLException {
-//
-//        JDBC.openConnection();
-//
-//        String sql = "UPDATE CUSTOMERS (Customer_ID, Customer_Name, Address, Postal_Code, Phone, divisionId) VALUES(?, ?, ?, ?, ?, ?)";
-//        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-//        ps.setInt(1, custId);
-//        ps.setString(2, custName);
-//        ps.setString(3, address);
-//        ps.setString(4, postalCode);
-//        ps.setString(5, Phone);
-//        ps.setInt(5, divisionId);
-//
-//        try {
-//            ps.executeUpdate();
-//            JDBC.closeConnection();
-//            return true;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            JDBC.closeConnection();
-//            return false;
-//        }
-//    }
 
+    //Create
     public static boolean updateCustomer(int custId, String custName, String address, String postalCode, String phone, int divisionId) throws SQLException {
         String sql = "UPDATE CUSTOMERS SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Customer_ID = ?";
 
@@ -105,6 +100,73 @@ public abstract class CustomerDAO {
     }
 
 
+
+
+    public static ObservableList<String> getCustomers() throws SQLException {
+
+        ObservableList<String> allCustomers = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM CUSTOMERS";
+        JDBC.openConnection();
+        Query.makeQuery(sql);
+        ResultSet rs = Query.getResult();
+
+        while (rs.next()) {
+            String name = rs.getString("Customer_Name");
+//            String custId = rs.getString("Customer_ID");
+            int custId = rs.getInt("Customer_ID");
+//            allCustomers.add(name + " " + custId);
+
+            allCustomers.add(name);
+        }
+        JDBC.closeConnection();
+        return allCustomers;
+    }
+
+    public static int getCustomerId(String custId) throws SQLException {
+        int customerId = -1;
+        JDBC.openConnection();
+        String sql = "SELECT CUSTOMER_ID FROM CUSTOMERS WHERE CUSTOMER_NAME = ?";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setString(1, custId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            customerId = rs.getInt("CUSTOMER_ID");
+        }
+        JDBC.closeConnection();
+        return customerId;
+    }
+
+    public static String getCustomerName(int customerId) throws SQLException {
+        String sql = "SELECT CUSTOMER_NAME FROM CUSTOMERS WHERE CUSTOMER_ID = ?";
+
+        try {
+            // Open a connection to the database
+            JDBC.openConnection();
+
+            // Create a prepared statement
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+
+            // Set the parameters for the prepared statement
+            ps.setInt(1, customerId);
+
+            // Execute the query
+            ResultSet rs = ps.executeQuery();
+
+            // If the result set has a row, retrieve the customer name
+            if (rs.next()) {
+                return rs.getString("CUSTOMER_NAME");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw e;
+        } finally {
+            // Close the connection to the database
+            JDBC.closeConnection();
+        }
+        // Return null if no customer was found with the given ID
+        return null;
+    }
+
     public static ObservableList<Customers> getAllCustomers() throws SQLException, Exception {
         ObservableList<Customers> allCustomers = FXCollections.observableArrayList();
         JDBC.openConnection();
@@ -127,39 +189,5 @@ public abstract class CustomerDAO {
         }
         JDBC.closeConnection();
         return allCustomers;
-    }
-
-    public static ObservableList<String> getCustomers() throws SQLException {
-
-        ObservableList<String> allCustomers = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM CUSTOMERS";
-        JDBC.openConnection();
-        Query.makeQuery(sql);
-        ResultSet rs = Query.getResult();
-
-        while (rs.next()) {
-            String name = rs.getString("Customer_Name");
-//            String custId = rs.getString("Customer_ID");
-            int custId = rs.getInt("Customer_ID");
-//            allCustomers.add(name + " " + custId);
-
-            allCustomers.add(String.valueOf(custId));
-        }
-        JDBC.closeConnection();
-        return allCustomers;
-    }
-
-    public static int getCustomerId(String custId) throws SQLException {
-        int customerId = -1;
-        JDBC.openConnection();
-        String sql = "SELECT CUSTOMER_ID FROM CUSTOMERS WHERE CUSTOMER_NAME = ?";
-        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setString(1, custId);
-        ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            customerId = rs.getInt("CUSTOMER_ID");
-        }
-        JDBC.closeConnection();
-        return customerId;
     }
 }

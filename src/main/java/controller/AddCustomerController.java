@@ -3,7 +3,6 @@ package controller;
 import DAO.CountryDAO;
 import DAO.CustomerDAO;
 import DAO.FirstLevelDivisionDAO;
-import helper.JDBC;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

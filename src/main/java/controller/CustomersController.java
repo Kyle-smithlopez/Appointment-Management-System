@@ -93,7 +93,6 @@ public class CustomersController implements Initializable {
         }
     }
 
-
     @FXML
     public void OnActionDeleteCustBtn(ActionEvent event) throws Exception {
         // Check if a customer is selected in the table view
@@ -104,31 +103,41 @@ public class CustomersController implements Initializable {
             alert.setContentText("Error: No Customer Selected");
             alert.showAndWait();
         } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete this customer?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                // Retrieve the selected customer's ID
-                int customerId = custTableView.getSelectionModel().getSelectedItem().getCustomerId();
+            // Get the selected customer
+            Customers selectedCustomer = custTableView.getSelectionModel().getSelectedItem();
 
-                // Try to delete the customer from the database
-                boolean success = CustomerDAO.deleteCustomer(customerId);
-                if (success) {
-                    // Display message to user indicating successful deletion of customer
-                    System.out.println("Customer deleted successfully");
-                    // Refresh the table view to reflect the changes
+            // Check if there are any appointments associated with the customer
+            boolean hasAppointments = CustomerDAO.hasAppointments(selectedCustomer.getCustomerId());
+
+            // If there are no appointments associated with the customer, proceed with deleting the customer
+            if (!hasAppointments) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Dialog");
+                alert.setContentText("Are you sure you want to delete this customer?");
+                Optional<ButtonType> result = alert.showAndWait();
+
+                if (result.get() == ButtonType.OK) {
+                    // Open a connection to the database
+                    JDBC.openConnection();
+
+                    // Delete the customer from the database
+                    CustomerDAO.deleteCustomer(selectedCustomer.getCustomerId());
+
+                    // Close the connection to the database
+                    JDBC.closeConnection();
+
+                    // Refresh the table view
                     refreshTableView();
-                } else {
-                    // Display error message to user
-                    System.out.println("Error deleting customer");
-                    Alert error = new Alert(Alert.AlertType.ERROR);
-                    error.setTitle("Error Dialog");
-                    error.setContentText("An error occurred while deleting the customer. Please try again.");
-                    error.showAndWait();
                 }
+            } else {
+                // If there are appointments associated with the customer, display an error message
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Dialog");
+                alert.setContentText("Error: Cannot delete customer because there are appointments associated with them.");
+                alert.showAndWait();
             }
         }
     }
-
 
     @FXML
     public void OnActionBackBtn(ActionEvent event) throws IOException {
@@ -154,7 +163,6 @@ public class CustomersController implements Initializable {
 
         try {
             Customers.addAll(CustomerDAO.getAllCustomers());
-
         } catch (Exception e) {
             System.out.println(e);
         }

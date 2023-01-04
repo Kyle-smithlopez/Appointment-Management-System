@@ -13,18 +13,18 @@
       </Label>
       <HBox layoutX="14.0" layoutY="61.0" prefHeight="384.0" prefWidth="904.0">
          <children>
-            <TableView fx:id="apptTableView" prefHeight="387.0" prefWidth="924.0">
+            <TableView fx:id="apptTableView">
               <columns>
                 <TableColumn fx:id="apptIdCol" text="Appt ID" />
                 <TableColumn fx:id="titleCol" prefWidth="69.0" text="Title" />
-                  <TableColumn fx:id="typeCol" prefWidth="68.0" text="Type" />
-                  <TableColumn fx:id="descriptCol" prefWidth="99.0" text="Description" />
-                  <TableColumn fx:id="locationCol" prefWidth="105.0" text="Location" />
-                  <TableColumn fx:id="sTimeCol" prefWidth="120.0" text="Start Date/Time" />
-                  <TableColumn fx:id="eTimeCol" prefWidth="111.0" text="End Date/Time" />
-                  <TableColumn fx:id="custIdCol" prefWidth="83.0" text="Customer ID" />
-                  <TableColumn fx:id="userIdCol" prefWidth="64.0" text="User ID" />
-                  <TableColumn fx:id="contactCol" prefWidth="104.0" text="Contact ID" />
+                  <TableColumn fx:id="typeCol" prefWidth="119.0" text="Type" />
+                  <TableColumn fx:id="descriptCol" prefWidth="113.0" text="Description" />
+                  <TableColumn fx:id="locationCol" prefWidth="126.0" text="Location" />
+                  <TableColumn fx:id="sTimeCol" prefWidth="101.0" text="Start Date/Time" />
+                  <TableColumn fx:id="eTimeCol" prefWidth="103.0" text="End Date/Time" />
+                  <TableColumn fx:id="custIdCol" prefWidth="76.0" text="Customer ID" />
+                  <TableColumn fx:id="userIdCol" prefWidth="46.0" text="User ID" />
+                  <TableColumn fx:id="contactCol" prefWidth="90.0" text="Contact" />
               </columns>
             </TableView>
          </children>
@@ -42,13 +42,13 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <RadioButton mnemonicParsing="false" selected="true" text="All" GridPane.columnIndex="1">
+                  <RadioButton fx:id="allViewRB" mnemonicParsing="false" onAction="#OnActionAllRB" selected="true" text="All" GridPane.columnIndex="1">
                      <toggleGroup>
                         <ToggleGroup fx:id="apptTG" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton mnemonicParsing="false" text="Week" toggleGroup="$apptTG" GridPane.columnIndex="2" />
-                  <RadioButton mnemonicParsing="false" prefWidth="69.0" text="Month" toggleGroup="$apptTG" GridPane.columnIndex="3" />
+                  <RadioButton fx:id="weekRB" mnemonicParsing="false" onAction="#OnActionWeekRB" text="Week" toggleGroup="$apptTG" GridPane.columnIndex="2" />
+                  <RadioButton fx:id="monthRB" mnemonicParsing="false" onAction="#OnActionMonthRB" prefWidth="69.0" text="Month" toggleGroup="$apptTG" GridPane.columnIndex="3" />
                   <Label text="View:" />
                </children>
             </GridPane>

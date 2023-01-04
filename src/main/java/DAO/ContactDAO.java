@@ -4,7 +4,6 @@ import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Contacts;
-import model.Countries;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,7 +45,7 @@ public abstract class ContactDAO {
 //            String id = rs.getString("Contact_ID");
             String name = rs.getString("Contact_Name");
 //            allContacts.add(name + " [" + id + "]");
-            allContacts.add(String.valueOf(id));
+            allContacts.add(name);
         }
         JDBC.closeConnection();
         return allContacts;

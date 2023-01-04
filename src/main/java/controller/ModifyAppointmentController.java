@@ -12,20 +12,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Appointments;
-import model.Customers;
-import model.User;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.ResourceBundle;
 
 public class ModifyAppointmentController implements Initializable {
@@ -38,20 +32,20 @@ public class ModifyAppointmentController implements Initializable {
     @FXML
     public TextField IdTxt;
     @FXML
-    public ComboBox typeDD;
+    public ComboBox<String> typeDD;
     @FXML
     public ComboBox STimeDD;
     @FXML
-    public ComboBox ContactDD;
+    public ComboBox<String> ContactDD;
     @FXML
-    public ComboBox CustomerDD;
+    public ComboBox<String> CustomerDD;
     @FXML
     public ComboBox ETimeDD;
     @FXML
     public DatePicker SDatePicker;
     @FXML
     public DatePicker EDatePicker;
-    public ComboBox UserDD;
+    public ComboBox<String> UserDD;
     Stage stage;
     Parent scene;
 
@@ -70,12 +64,15 @@ public class ModifyAppointmentController implements Initializable {
         return appointmentTimes;
     }
 
-    public void sendAppointment(Appointments appointment) {
+    public void sendAppointment(Appointments appointment) throws SQLException {
 
-        LocalDate sDate = appointment.getStart().toLocalDate();
-        LocalTime sTime = appointment.getStart().toLocalTime();
-        LocalDate eDate = appointment.getEnd().toLocalDate();
-        LocalTime eTime = appointment.getEnd().toLocalTime();
+        //        JDBC.openConnection();
+        LocalDateTime localStart = appointment.getStart().toLocalDateTime();
+        LocalDateTime localEnd = appointment.getEnd().toLocalDateTime();
+        LocalTime sTime = localStart.toLocalTime();
+        LocalDate sDate = localStart.toLocalDate();
+        LocalTime eTime = localEnd.toLocalTime();
+        LocalDate eDate = localEnd.toLocalDate();
 
         IdTxt.setText(String.valueOf(appointment.getApptId()));
         TitleTxt.setText(appointment.getTitle());
@@ -86,18 +83,85 @@ public class ModifyAppointmentController implements Initializable {
         ETimeDD.setValue(eTime);
         SDatePicker.setValue(sDate);
         EDatePicker.setValue(eDate);
-        ContactDD.setValue(appointment.getContactId());
-        CustomerDD.setValue(appointment.getCustId());
-        UserDD.setValue(appointment.getUserId());
+        ContactDD.setValue(appointment.getContactName());
+        //Double check this line ???
+        UserDD.setValue(String.valueOf(appointment.getUserId()));
+        try {
+            // Retrieve the customer name from the database
+            String customerName = CustomerDAO.getCustomerName(appointment.getCustId());
+            // Set the customer name in the combo box
+            CustomerDD.setValue(customerName);
+        } catch (SQLException e) {
+            // Handle the exception
+        }
+//        JDBC.closeConnection();
     }
 
     @FXML
-    public void OnActionSaveAppt(ActionEvent event) throws IOException {
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource("/view/appointments-view.fxml"));
-        stage.setScene(new Scene(scene));
-        stage.show();
+    public void OnActionSaveAppt(ActionEvent event) throws IOException, SQLException {
+
+        // Retrieve the customerId from the text field
+        int apptId = Integer.parseInt(IdTxt.getText());
+
+        //Gets String from Customer ComboBox and pulls the INT ID associated with it.
+        String customerName = CustomerDD.getValue();
+        int custId = CustomerDAO.getCustomerId(customerName);
+
+        // Retrieve the selected userId from the combo box and convert it to an integer
+        String selectedUserId = UserDD.getSelectionModel().getSelectedItem();
+        int userId = Integer.parseInt(selectedUserId);
+
+        // Retrieve the selected contactId from the combo box and convert it to an integer
+        String contactName = ContactDD.getValue();
+        // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
+        int contactId = ContactDAO.getContactId(contactName);
+
+        // Retrieve the selected date and time from the DatePicker and ComboBox
+        LocalDate sdate = SDatePicker.getValue();
+        String stime = String.valueOf(STimeDD.getValue());
+        LocalDate edate = EDatePicker.getValue();
+        String etime = String.valueOf(ETimeDD.getValue());
+
+        // Convert the selected time to a LocalTime object
+        LocalTime lt = LocalTime.parse(stime);
+        LocalTime elt = LocalTime.parse(etime);
+
+        // Combine the date and time into a LocalDateTime object
+        LocalDateTime ldt = LocalDateTime.of(sdate, lt);
+        LocalDateTime eldt = LocalDateTime.of(edate, elt);
+
+        // Convert the LocalDateTime objects to ZonedDateTime objects in UTC
+        ZonedDateTime startTimeUTC = ldt.atZone(ZoneId.of("UTC"));
+        ZonedDateTime endTimeUTC = eldt.atZone(ZoneId.of("UTC"));
+
+        // Retrieve the form input values
+        String title = TitleTxt.getText();
+        String description = DescriptionTxt.getText();
+        String location = LocationTxt.getText();
+        String type = typeDD.getValue();
+
+
+        // Try to update the customer in the database
+        boolean success = AppointmentsDAO.updateAppointment(apptId, title, description, location, type, startTimeUTC, endTimeUTC, custId, userId, contactId);
+        if (success) {
+            // Display message to user indicating successful update of customer
+            System.out.println("Customer updated successfully");
+
+            // Go back to the customers view
+            stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            scene = FXMLLoader.load(getClass().getResource("/view/appointments-view.fxml"));
+            stage.setScene(new Scene(scene));
+            stage.show();
+        } else {
+            // Display error message to user
+            System.out.println("Error adding customer");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setContentText("Please enter a valid value for each Text Field.");
+            alert.showAndWait();
+        }
     }
+
     @FXML
     public void OnActionCancel(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();

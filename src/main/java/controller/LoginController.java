@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 
 
-
     Stage stage;
     Parent scene;
     @FXML
@@ -43,7 +42,6 @@ public class LoginController implements Initializable {
     public Label timeZoneResultLbl;
     @FXML
     public Label LoginLbl;
-
 
 
     @FXML
@@ -71,11 +69,9 @@ public class LoginController implements Initializable {
                 alert.setContentText(rb.getString("Incorrect") + " " + rb.getString("Username") + " " + rb.getString("or") + " " + rb.getString("Password"));
                 alert.showAndWait();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-         catch(IOException e){
-             e.printStackTrace();
-            }
     }
 
     @FXML
@@ -89,34 +85,25 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try
-        {
+        try {
 
             Locale locale = Locale.getDefault();
             Locale.setDefault(locale);
 
-//            ZoneId z = ZoneId.systemDefault();
-//
-//
-//            timeZoneResultLbl.setText(String.valueOf(z));
             timeZoneResultLbl.setText(ZoneId.systemDefault().toString());
 
             rb = ResourceBundle.getBundle("language", Locale.getDefault());
             LoginLbl.setText(rb.getString("Login"));
             UsernameLbl.setText(rb.getString("Username") + ":");
-            PasswordLbl.setText(rb.getString("Password") + ":" +
-                    "" +
-                    "");
+            PasswordLbl.setText(rb.getString("Password") + ":" + "" + "");
             LoginBtn.setText(rb.getString("Login"));
             ExitBtn.setText(rb.getString("Exit"));
             TimeZoneLbl.setText(rb.getString("TimeZone"));
 
-        } catch(MissingResourceException e) {
+        } catch (MissingResourceException e) {
             System.out.println("Resource file missing: " + e);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e);
         }
-        return;
     }
 }

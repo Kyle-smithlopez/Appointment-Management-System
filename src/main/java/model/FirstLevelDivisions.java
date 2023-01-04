@@ -6,7 +6,6 @@ public class FirstLevelDivisions {
     private int countryId;
 
 
-
     public FirstLevelDivisions(int divisionID, String divisionName, int countryId) {
         this.divisionID = divisionID;
         this.divisionName = divisionName;

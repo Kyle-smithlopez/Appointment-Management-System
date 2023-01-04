@@ -1,13 +1,6 @@
 package model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class Appointments {
     private int apptId;
@@ -15,40 +8,19 @@ public class Appointments {
     private String description;
     private String location;
     private String type;
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private Timestamp start;
+    private Timestamp end;
     public int custId;
     public int userId;
-    public int contactId;
+    public static int contactId;
     public String custName;
     public String userName;
     public String contactName;
 
-    public String getCustName() {
-        return custName;
-    }
+//    private ZonedDateTime start;
+//    private ZonedDateTime end;
 
-    public void setCustName(String custName) {
-        this.custName = custName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getContactName() {
-        return contactName;
-    }
-
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
-    }
-
-    public Appointments(int apptId, String title, String description, String location, String type, LocalDateTime start, LocalDateTime end, int custId, int userId, int contactId) {
+    public Appointments(int apptId, String title, String description, String location, String type, Timestamp start, Timestamp end, int custId, int userId, int contactId, String contactName) {
 
         this.apptId = apptId;
         this.title = title;
@@ -60,6 +32,9 @@ public class Appointments {
         this.custId = custId;
         this.userId = userId;
         this.contactId = contactId;
+        this.contactName = contactName;
+//        this.start = start.toInstant().atZone(ZoneId.of("UTC"));
+//        this.end = end.toInstant().atZone(ZoneId.of("UTC"));
     }
 
     public int getApptId() {
@@ -102,19 +77,19 @@ public class Appointments {
         this.type = type;
     }
 
-    public LocalDateTime getStart() {
+    public Timestamp getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(Timestamp start) {
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
+    public Timestamp getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(Timestamp end) {
         this.end = end;
     }
 
@@ -134,11 +109,53 @@ public class Appointments {
         this.userId = userId;
     }
 
-    public int getContactId() {
+    public static int getContactId() {
         return contactId;
     }
 
     public void setContactId(int contactId) {
         this.contactId = contactId;
     }
+
+//    public ZonedDateTime getStart() {
+//        return start;
+//    }
+//
+//    public void setStart(ZonedDateTime start) {
+//        this.start = start;
+//    }
+//
+//    public ZonedDateTime getEnd() {
+//        return end;
+//    }
+//
+//    public void setEnd(ZonedDateTime end) {
+//        this.end = end;
+//    }
+
+    public String getCustName() {
+        return custName;
+    }
+
+    public void setCustName(String custName) {
+        this.custName = custName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+
 }
