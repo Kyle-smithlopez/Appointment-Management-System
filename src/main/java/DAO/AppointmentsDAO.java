@@ -184,61 +184,6 @@ public abstract class AppointmentsDAO {
 
 
 
-//    public static List<Appointments> getAppointmentsForCustomer(int customerId) throws SQLException {
-//        // Declare a list to hold the appointments
-//        List<Appointments> appointments = new ArrayList<>();
-//
-////        PreparedStatement ps = null;
-//        try {
-//            // Establish a connection to the database
-//            JDBC.openConnection();
-//
-//            // Define the SQL query to execute
-//            String sql = "SELECT * FROM APPOINTMENTS AS A" + " LEFT OUTER JOIN CONTACTS AS C ON a.CONTACT_ID = C.CONTACT_ID;";
-//
-//            // Prepare the statement
-//            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-//            ps.setInt(1, customerId);
-//            ResultSet resultSet = ps.executeQuery();
-//
-//
-//            // Iterate over the result set and create Appointment objects for each row
-//            while (resultSet.next()) {
-//                // Retrieve the values from the result set
-//                int id = resultSet.getInt("appointment_Id");
-//                String title = resultSet.getString("title");
-//                String description = resultSet.getString("description");
-//                String location = resultSet.getString("location");
-//                String type = resultSet.getString("type");
-//                Timestamp start = resultSet.getTimestamp("Start");
-//                Timestamp end = resultSet.getTimestamp("End");
-//
-//                int contactId = resultSet.getInt("Contact_ID");
-//                int custId = resultSet.getInt("Customer_ID");
-//                int userId = resultSet.getInt("User_ID");
-//                String contactName = resultSet.getString("Contact_Name");
-//
-//                // Create a new Appointment object
-//                Appointments appointment = new Appointments(id, title, description, location, type, start, end, custId, userId, contactId, contactName);
-//
-//                // Add the appointment to the list
-//                appointments.add(appointment);
-//            }
-//        } catch (SQLException e) {
-//            // Print the stack trace and rethrow the exception
-//            e.printStackTrace();
-//            throw e;
-//        } finally {
-////            // Close the statement and connection
-////            if (ps != null) {
-////                ps.close();
-////            }
-//            JDBC.closeConnection();
-//        }
-//
-//        // Return the list of appointments
-//        return appointments;
-//    }
 
     public static List<Appointments> getAppointmentsForCustomer(int customerId) throws SQLException {
         JDBC.openConnection();
