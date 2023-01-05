@@ -1,6 +1,8 @@
 package model;
 
 import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public class Appointments {
     private int apptId;
@@ -8,8 +10,10 @@ public class Appointments {
     private String description;
     private String location;
     private String type;
-    private Timestamp start;
-    private Timestamp end;
+//    private Timestamp start;
+//    private Timestamp end;
+    private String start;
+    private String end;
     public int custId;
     public int userId;
     public static int contactId;
@@ -20,7 +24,7 @@ public class Appointments {
 //    private ZonedDateTime start;
 //    private ZonedDateTime end;
 
-    public Appointments(int apptId, String title, String description, String location, String type, Timestamp start, Timestamp end, int custId, int userId, int contactId, String contactName) {
+    public Appointments(int apptId, String title, String description, String location, String type, String start, String end, int custId, int userId, int contactId, String contactName) {
 
         this.apptId = apptId;
         this.title = title;
@@ -33,8 +37,37 @@ public class Appointments {
         this.userId = userId;
         this.contactId = contactId;
         this.contactName = contactName;
-//        this.start = start.toInstant().atZone(ZoneId.of("UTC"));
-//        this.end = end.toInstant().atZone(ZoneId.of("UTC"));
+    }
+
+    public static DateTimeFormatter getLocalDateTimeFormatter() {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
+    }
+
+
+    public static DateTimeFormatter getESTDateTimeFormatter() {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("America/New_York"));
+    }
+
+
+    public static DateTimeFormatter getUTCDateTimeFormatter() {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("UTC"));
+    }
+
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public String getEnd() {
+        return end;
     }
 
     public int getApptId() {
@@ -77,21 +110,21 @@ public class Appointments {
         this.type = type;
     }
 
-    public Timestamp getStart() {
-        return start;
-    }
-
-    public void setStart(Timestamp start) {
-        this.start = start;
-    }
-
-    public Timestamp getEnd() {
-        return end;
-    }
-
-    public void setEnd(Timestamp end) {
-        this.end = end;
-    }
+//    public Timestamp getStart() {
+//        return start;
+//    }
+//
+//    public void setStart(Timestamp start) {
+//        this.start = start;
+//    }
+//
+//    public Timestamp getEnd() {
+//        return end;
+//    }
+//
+//    public void setEnd(Timestamp end) {
+//        this.end = end;
+//    }
 
     public int getCustId() {
         return custId;
@@ -116,22 +149,6 @@ public class Appointments {
     public void setContactId(int contactId) {
         this.contactId = contactId;
     }
-
-//    public ZonedDateTime getStart() {
-//        return start;
-//    }
-//
-//    public void setStart(ZonedDateTime start) {
-//        this.start = start;
-//    }
-//
-//    public ZonedDateTime getEnd() {
-//        return end;
-//    }
-//
-//    public void setEnd(ZonedDateTime end) {
-//        this.end = end;
-//    }
 
     public String getCustName() {
         return custName;
