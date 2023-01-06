@@ -21,9 +21,6 @@ public class Appointments {
     private String userName;
     private String contactName;
 
-//    private ZonedDateTime start;
-//    private ZonedDateTime end;
-
     public Appointments(int apptId, String title, String description, String location, String type, String start, String end, int custId, int userId, int contactId, String contactName) {
 
         this.apptId = apptId;

@@ -19,15 +19,10 @@ import model.Appointments;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.*;
-import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.time.ZonedDateTime;
 
 public class AddAppointmentController implements Initializable {
 
@@ -99,276 +94,52 @@ public class AddAppointmentController implements Initializable {
     }
 
 
-//    @FXML
-//    public void OnActionSaveAppt(ActionEvent event) throws IOException, SQLException {
-//
-//
-//        // Retrieve the selected contactId from the combo box and convert it to an integer
-//        String customerName = customerDD.getValue();
-//        // take user selected Contact_Name and find the contact_ID FK so it can be add to appointments table.
-//        int custId = CustomerDAO.getCustomerId(customerName);
-//
-//        // Retrieve the list of appointments for the selected customer
-//        List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
-//
-//        // Retrieve the selected userId from the combo box and convert it to an integer
-//        String selectedUserId = userDD.getSelectionModel().getSelectedItem();
-//        int userId = Integer.parseInt(selectedUserId);
-//
-//        // Retrieve the selected contactId from the combo box and convert it to an integer
-//        String contactName = contactsDD.getValue();
-//
-//        // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
-//        int contactId = ContactDAO.getContactId(contactName);
-//
-//
-//        // Retrieve the selected date and time from the DatePicker and ComboBox
-//        LocalDate sdate = sDatePicker.getValue();
-//        String stime = String.valueOf(startDD.getValue());
-//        LocalDate edate = eDatePicker.getValue();
-//        String etime = String.valueOf(endDD.getValue());
-//
-//        // Convert the selected time to a LocalTime object
-//        LocalTime lt = LocalTime.parse(stime);
-//        LocalTime elt = LocalTime.parse(etime);
-//
-//
-//        // Combine the date and time into a LocalDateTime object
-//        LocalDateTime ldt = LocalDateTime.of(sdate, lt);
-//        LocalDateTime eldt = LocalDateTime.of(edate, elt);
-//
-//
-//        if (sdate.isAfter(edate)) {
-//            // end date is before start date, show an error message or do something else
-//            Alert invalidDate = new Alert(Alert.AlertType.ERROR);
-//            invalidDate.setTitle("Error");
-//            invalidDate.setHeaderText("Invalid Date Range");
-//            invalidDate.setContentText("End date must be on the same day or after the start date.");
-//            invalidDate.showAndWait();
-//        } else {
-//            ZoneId estZoneId = ZoneId.of("EST", ZoneId.SHORT_IDS);
-//            ZonedDateTime estStartTime = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(estZoneId);
-//            ZonedDateTime estEndTime = eldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(estZoneId);
-//
-//            if (estStartTime.toLocalTime().isBefore(LocalTime.of(8, 0)) || estStartTime.toLocalTime().isAfter(LocalTime.of(22, 0)) || estEndTime.toLocalTime().isBefore(LocalTime.of(8, 0)) || estEndTime.toLocalTime().isAfter(LocalTime.of(22, 0)) || estEndTime.toLocalTime().isBefore(estStartTime.toLocalTime())) {
-//                // start time is invalid, show an error message or do something else
-//                Alert businessHours = new Alert(Alert.AlertType.ERROR);
-//                businessHours.setTitle("Error");
-//                businessHours.setHeaderText("Invalid Time Range");
-//                businessHours.setContentText("Start and end times must be during business hours between 8:00 EST and 22:00 EST and the end time must be after the start time.");
-//                businessHours.showAndWait();
-//            } else {
-//
-//
-//                // Convert the LocalDateTime objects to ZonedDateTime objects in UTC
-//                ZonedDateTime startTimeUTC = ldt.atZone(ZoneId.of("UTC"));
-//                ZonedDateTime endTimeUTC = eldt.atZone(ZoneId.of("UTC"));
-//
-//
-//                // Check if the start or end time of the new appointment overlaps with any of the existing appointments
-//                // Check if the start or end time of the new appointment overlaps with any of the existing appointments
-//                ZonedDateTime startZDT = null;
-//                ZonedDateTime endZDT = null;
-//
-//
-//                for (Appointments appointment : appointments) {
-//                    //CURRENTLY WORKING ON THE CODE BELOW
-//
-//                    Timestamp startTimestamp = appointment.getStart();
-//                    startZDT = startTimestamp.toInstant().atZone(ZoneId.of("UTC"));
-//                    Timestamp endTimestamp = appointment.getEnd();
-//                    endZDT = endTimestamp.toInstant().atZone(ZoneId.of("UTC"));
-//
-//
-//                }
-//                if ((startTimeUTC.isAfter(startZDT) && ldt.isBefore(ChronoLocalDateTime.from(endZDT))) || (eldt.isAfter(ChronoLocalDateTime.from(startZDT)) && eldt.isBefore(ChronoLocalDateTime.from(endZDT)))) {
-//                    {
-//                        // overlap detected, show an error message or do something else
-//                        Alert overlap = new Alert(Alert.AlertType.ERROR);
-//                        overlap.setTitle("Error");
-//                        overlap.setHeaderText("Overlapping Appointment");
-//                        overlap.setContentText("The selected time range overlaps with an existing appointment for this customer. Please select a different time range.");
-//                        overlap.showAndWait();
-//                        return;
-//                    }
-//                }
-//
-//
-//                // Retrieve the form input values
-//                String title = titleTxt.getText();
-//                String description = descriptionTxt.getText();
-//                String location = locationTxt.getText();
-//                String type = typeDD.getValue();
-//
-//                try {
-//                    // Try to add the appointment to the database
-//                    boolean success = AppointmentsDAO.addAppointment(title, description, location, type, startTimeUTC, endTimeUTC, custId, userId, contactId);
-//                    if (success) {
-//                        // Display message to user indicating successful addition of appointment
-//                        System.out.println("Appointment added successfully");
-//
-//                        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-//                        scene = FXMLLoader.load(getClass().getResource("/view/appointments-view.fxml"));
-//                        stage.setScene(new Scene(scene));
-//                        stage.show();
-//                    } else {
-//                        // Display error message to user
-//                        System.out.println("Error adding appointment");
-//                        Alert alert = new Alert(Alert.AlertType.ERROR);
-//                        alert.setTitle("Error Dialog");
-//                        alert.setContentText("Please enter a valid value for each Text Field.");
-//                        alert.showAndWait();
-//                    }
-//                } catch (Exception e) {
-//                    // Display error message to user
-//                    System.out.println("Error adding appointment: " + e.getMessage());
-//                    Alert alert = new Alert(Alert.AlertType.ERROR);
-//                    alert.setTitle("Error Dialog");
-//                    alert.setContentText("An error occurred while adding the appointment: " + e.getMessage());
-//                    alert.showAndWait();
-//                }
-//            }
-//        }
-//    }
-
-//    @FXML
-//    public void OnActionSaveAppt(ActionEvent event) throws IOException, SQLException {
-//
-//
-//        // Retrieve the selected contactId from the combo box and convert it to an integer
-//        String customerName = customerDD.getValue();
-//        // take user selected Contact_Name and find the contact_ID FK so it can be add to appointments table.
-//        int custId = CustomerDAO.getCustomerId(customerName);
-//
-////        // Retrieve the list of appointments for the selected customer
-////        List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
-//
-//        // Retrieve the selected userId from the combo box and convert it to an integer
-//        String selectedUserId = userDD.getSelectionModel().getSelectedItem();
-//        int userId = Integer.parseInt(selectedUserId);
-//
-//        // Retrieve the selected contactId from the combo box and convert it to an integer
-//        String contactName = contactsDD.getValue();
-//
-//        // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
-//        int contactId = ContactDAO.getContactId(contactName);
-//
-//
-//        // Retrieve the selected date and time from the DatePicker and ComboBox
-//        LocalDate sdate = sDatePicker.getValue();
-//        String stime = String.valueOf(startDD.getValue());
-//        LocalDate edate = eDatePicker.getValue();
-//        String etime = String.valueOf(endDD.getValue());
-//
-//        // Convert the selected time to a LocalTime object
-//        LocalTime lt = LocalTime.parse(stime);
-//        LocalTime elt = LocalTime.parse(etime);
-//
-//        // Create a ZoneId for UTC
-//        ZoneId utcZoneId = ZoneId.of("UTC", ZoneId.SHORT_IDS);
-//        // Create a ZoneId for UTC
-//        ZoneId myZoneId = ZoneId.systemDefault();
-//
-//
-//        // Combine the date and time into a LocalDateTime object
-//        LocalDateTime ldt = LocalDateTime.of(sdate, lt);
-//        LocalDateTime eldt = LocalDateTime.of(edate, elt);
-//
-//        ZonedDateTime myZDT = ZonedDateTime.of(ldt, myZoneId);
-//        ZonedDateTime myEZDT = ZonedDateTime.of(eldt, myZoneId);
-//
-//        ZonedDateTime utcZDT = ZonedDateTime.ofInstant(myZDT.toInstant(), utcZoneId);
-//        ZonedDateTime utcEZDT = ZonedDateTime.ofInstant(myEZDT.toInstant(), utcZoneId);
-//
-//        Timestamp utcStart = Timestamp.valueOf(utcZDT.format(DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss")));
-//        Timestamp utcEnd = Timestamp.valueOf(utcEZDT.format(DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss")));
-//
-//
-//        if (sdate.isAfter(edate)) {
-//            // end date is before start date, show an error message or do something else
-//            Alert invalidDate = new Alert(Alert.AlertType.ERROR);
-//            invalidDate.setTitle("Error");
-//            invalidDate.setHeaderText("Invalid Date Range");
-//            invalidDate.setContentText("End date must be on the same day or after the start date.");
-//            invalidDate.showAndWait();
-//        } else {
-//            ZoneId estZoneId = ZoneId.of("EST", ZoneId.SHORT_IDS);
-//            ZonedDateTime estStartTime = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(estZoneId);
-//            ZonedDateTime estEndTime = eldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(estZoneId);
-//
-//            if (estStartTime.toLocalTime().isBefore(LocalTime.of(8, 0)) || estStartTime.toLocalTime().isAfter(LocalTime.of(22, 0)) || estEndTime.toLocalTime().isBefore(LocalTime.of(8, 0)) || estEndTime.toLocalTime().isAfter(LocalTime.of(22, 0)) || estEndTime.toLocalTime().isBefore(estStartTime.toLocalTime())) {
-//                // start time is invalid, show an error message or do something else
-//                Alert businessHours = new Alert(Alert.AlertType.ERROR);
-//                businessHours.setTitle("Error");
-//                businessHours.setHeaderText("Invalid Time Range");
-//                businessHours.setContentText("Start and end times must be during business hours between 8:00 EST and 22:00 EST and the end time must be after the start time.");
-//                businessHours.showAndWait();
-//            } else {
-//
-//
-//                // Retrieve the form input values
-//                String title = titleTxt.getText();
-//                String description = descriptionTxt.getText();
-//                String location = locationTxt.getText();
-//                String type = typeDD.getValue();
-//
-//                try {
-//                    // Try to add the appointment to the database
-//                    boolean success = AppointmentsDAO.addAppointment(title, description, location, type, utcStart, utcEnd, custId, userId, contactId);
-//                    if (success) {
-//                        // Display message to user indicating successful addition of appointment
-//                        System.out.println("Appointment added successfully");
-//
-//                        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-//                        scene = FXMLLoader.load(getClass().getResource("/view/appointments-view.fxml"));
-//                        stage.setScene(new Scene(scene));
-//                        stage.show();
-//                    } else {
-//                        // Display error message to user
-//                        System.out.println("Error adding appointment");
-//                        Alert alert = new Alert(Alert.AlertType.ERROR);
-//                        alert.setTitle("Error Dialog");
-//                        alert.setContentText("Please enter a valid value for each Text Field.");
-//                        alert.showAndWait();
-//                    }
-//                } catch (Exception e) {
-//                    // Display error message to user
-//                    System.out.println("Error adding appointment: " + e.getMessage());
-//                    Alert alert = new Alert(Alert.AlertType.ERROR);
-//                    alert.setTitle("Error Dialog");
-//                    alert.setContentText("An error occurred while adding the appointment: " + e.getMessage());
-//                    alert.showAndWait();
-//                }
-//            }
-//        }
-//    }
-
+    //Updated Version - Added validation check for empty values.
     @FXML
-    public void OnActionSaveAppt(ActionEvent event) throws IOException, SQLException {
+    public void OnActionSaveAppt(ActionEvent event) throws SQLException {
 
         // Retrieve the selected contactId from the combo box and convert it to an integer
         String customerName = customerDD.getValue();
-        // take user selected Contact_Name and find the contact_ID FK so it can be add to appointments table.
-        int custId = CustomerDAO.getCustomerId(customerName);
-
-        // Retrieve the list of appointments for the selected customer
-        List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
 
         // Retrieve the selected userId from the combo box and convert it to an integer
         String selectedUserId = userDD.getSelectionModel().getSelectedItem();
-        int userId = Integer.parseInt(selectedUserId);
 
         // Retrieve the selected contactId from the combo box and convert it to an integer
         String contactName = contactsDD.getValue();
-
-        // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
-        int contactId = ContactDAO.getContactId(contactName);
 
         // Retrieve the selected date and time from the DatePicker and ComboBox
         LocalDate sdate = sDatePicker.getValue();
         String stime = String.valueOf(startDD.getValue());
         LocalDate edate = eDatePicker.getValue();
         String etime = String.valueOf(endDD.getValue());
+
+        // Retrieve the form input values
+        String title = titleTxt.getText();
+        String description = descriptionTxt.getText();
+        String location = locationTxt.getText();
+        String type = typeDD.getValue();
+
+        if (customerName == null || selectedUserId == null || contactName == null || sdate == null || stime == null || edate == null || etime == null || title.isEmpty() || description.isEmpty() || location.isEmpty() || type == null) {
+            // show an error message or do something else
+            Alert emptyFields = new Alert(Alert.AlertType.ERROR);
+            emptyFields.setTitle("Error");
+            emptyFields.setHeaderText("Empty Fields");
+            emptyFields.setContentText("All fields are required. Please make sure all fields are filled out.");
+            emptyFields.showAndWait();
+            return;
+        }
+
+        // Convert the selected userId to an integer
+        int userId = Integer.parseInt(selectedUserId);
+
+        // take user selected Contact_Name and find the contact_ID FK so it can be add to appointments table.
+        int custId = CustomerDAO.getCustomerId(customerName);
+
+        // Retrieve the list of appointments for the selected customer
+        List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
+
+        // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
+        int contactId = ContactDAO.getContactId(contactName);
 
         // Convert the selected time to a LocalTime object
         LocalTime lt = LocalTime.parse(stime);
@@ -415,8 +186,9 @@ public class AddAppointmentController implements Initializable {
                 businessHours.showAndWait();
             } else {
 
+
                 // Loop through the appointments for the selected customer
-                for (Appointments appointment: appointments) {
+                for (Appointments appointment : appointments) {
 
                     //Gets string Start and End from appointment list
                     String sStart = appointment.getStart();
@@ -444,11 +216,6 @@ public class AddAppointmentController implements Initializable {
                         return;
                     }
                 }
-                // Retrieve the form input values
-                String title = titleTxt.getText();
-                String description = descriptionTxt.getText();
-                String location = locationTxt.getText();
-                String type = typeDD.getValue();
 
                 try {
                     // Try to add the appointment to the database
@@ -481,6 +248,7 @@ public class AddAppointmentController implements Initializable {
         }
     }
 
+
     @FXML
     public void OnActionCancel(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -492,21 +260,6 @@ public class AddAppointmentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> appointmentTimes = getAppointmentTimes();
-// Retrieve the list of appointments for a given customer
-        int customerId = 2; // Replace with the customerId of the customer you want to retrieve appointments for
-        List<Appointments> appointments = null;
-        try {
-            appointments = AppointmentsDAO.getAppointmentsForCustomer(customerId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        for (Appointments appointment : appointments) {
-            String start = appointment.getStart();
-            String end = appointment.getEnd();
-            System.out.println("Start: " + start + ", End: " + end);
-        }
-
         try {
             contactsDD.setItems(ContactDAO.getContacts());
             customerDD.setItems((CustomerDAO.getCustomers()));
@@ -520,4 +273,4 @@ public class AddAppointmentController implements Initializable {
     }
 }
 
-//   1/5/2023   I will need to double Check for potential issues with this code due to the changes made from Timestamp to String
+//   1/5/2023   Added validation for overlapping customer appointments

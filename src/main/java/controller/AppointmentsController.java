@@ -137,7 +137,7 @@ public class AppointmentsController implements Initializable {
                     Alert confirmation = new Alert(Alert.AlertType.INFORMATION);
                     confirmation.setTitle("Appointment Cancelled");
                     confirmation.setHeaderText("Appointment ID: " + appointmentId);
-                    confirmation.setContentText("Type of Appointment: " + Type);
+                    confirmation.setContentText("Appointment Type: " + Type);
                     confirmation.showAndWait();
 
                     // Refresh the table view to reflect the changes
@@ -184,7 +184,6 @@ public class AppointmentsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
 
         apptIdCol.setCellValueFactory(new PropertyValueFactory<>("apptId"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));

@@ -102,6 +102,7 @@ public abstract class AppointmentsDAO {
         }
     }
 
+    //Gets String Type to populate ComboBox
     public static ObservableList<String> getType() throws SQLException {
 
         ObservableList<String> allTypes = FXCollections.observableArrayList();
@@ -120,6 +121,34 @@ public abstract class AppointmentsDAO {
         }
         JDBC.closeConnection();
         return allTypes;
+    }
+
+    //Gets List of Appointments by Customer
+    public static List<Appointments> getAppointmentsForCustomer(int customerId) throws SQLException {
+        JDBC.openConnection();
+        String sql = "SELECT * FROM APPOINTMENTS AS a" + " LEFT JOIN CONTACTS AS C ON a.CONTACT_ID = C.CONTACT_ID" + " WHERE a.CUSTOMER_ID = ?";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setInt(1, customerId);
+
+        ResultSet rs = ps.executeQuery();
+        List<Appointments> appointments = new ArrayList<>();
+        while (rs.next()) {
+            int appointmentId = rs.getInt("appointment_id");
+            String title = rs.getString("title");
+            String description = rs.getString("description");
+            String location = rs.getString("location");
+            String type = rs.getString("type");
+            String start = rs.getString("start");
+            String end = rs.getString("end");
+            int contactId = rs.getInt("contact_id");
+            int userId = rs.getInt("user_id");
+            String contactName = rs.getString("Contact_Name");
+
+            Appointments appointment = new Appointments(appointmentId, title, description, location, type, start, end, contactId, customerId, userId, contactName);
+            appointments.add(appointment);
+        }
+        JDBC.closeConnection();
+        return appointments;
     }
 
 //     MAY NOT NEED - Commented out 1/3/2023
@@ -149,7 +178,7 @@ public abstract class AppointmentsDAO {
 //        }
 //        return filteredAppointments;
 //    }
-    // Updated Version
+    // Updated Version - Filters appointments by week or month
     public static ObservableList<Appointments> getAppointmentsWithinRange(ObservableList<Appointments> appointments, ZonedDateTime start, ZonedDateTime end) {
         ObservableList<Appointments> filteredAppointments = FXCollections.observableArrayList();
         DateTimeFormatter formatter = getLocalDateTimeFormatter();
@@ -212,12 +241,12 @@ public abstract class AppointmentsDAO {
         return allAppointments;
     }
 
-//     Checking if appointments overlap
-    public static List<Appointments> getAppointmentsForCustomer(int customerId) throws SQLException {
+    public static List<Appointments> getAppointmentsForUser(int userId) throws SQLException {
+
         JDBC.openConnection();
-        String sql = "SELECT * FROM APPOINTMENTS AS a" + " LEFT JOIN CONTACTS AS C ON a.CONTACT_ID = C.CONTACT_ID" + " WHERE a.CUSTOMER_ID = ?";
+        String sql = "SELECT * FROM APPOINTMENTS AS a" + " LEFT JOIN CONTACTS AS C ON a.CONTACT_ID = C.CONTACT_ID" + " WHERE a.user_id = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setInt(1, customerId);
+        ps.setInt(1, userId);
 
         ResultSet rs = ps.executeQuery();
         List<Appointments> appointments = new ArrayList<>();
@@ -230,14 +259,15 @@ public abstract class AppointmentsDAO {
             String start = rs.getString("start");
             String end = rs.getString("end");
             int contactId = rs.getInt("contact_id");
-            int userId = rs.getInt("user_id");
+            int customerId = rs.getInt("user_id");
             String contactName = rs.getString("Contact_Name");
 
             Appointments appointment = new Appointments(appointmentId, title, description, location, type, start, end, contactId, customerId, userId, contactName);
             appointments.add(appointment);
-        }
+            }
         JDBC.closeConnection();
-        return appointments;
-    }
+            return appointments;
+        }
+
 }
 

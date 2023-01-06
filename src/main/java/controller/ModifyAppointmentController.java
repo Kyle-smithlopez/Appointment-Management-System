@@ -21,6 +21,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ModifyAppointmentController implements Initializable {
@@ -125,31 +126,56 @@ public class ModifyAppointmentController implements Initializable {
     }
 
 
-//    Commented out as I am converting the Timestamp to string 1/4/23
+    //    Commented out as I am converting the Timestamp to string 1/4/23
     @FXML
     public void OnActionSaveAppt(ActionEvent event) throws IOException, SQLException {
 
         // Retrieve the customerId from the text field
         int apptId = Integer.parseInt(IdTxt.getText());
 
-        //Gets String from Customer ComboBox and pulls the INT ID associated with it.
+
+        // Retrieve the selected contactId from the combo box and convert it to an integer
         String customerName = CustomerDD.getValue();
-        int custId = CustomerDAO.getCustomerId(customerName);
 
         // Retrieve the selected userId from the combo box and convert it to an integer
         String selectedUserId = UserDD.getSelectionModel().getSelectedItem();
-        int userId = Integer.parseInt(selectedUserId);
 
         // Retrieve the selected contactId from the combo box and convert it to an integer
         String contactName = ContactDD.getValue();
-        // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
-        int contactId = ContactDAO.getContactId(contactName);
 
         // Retrieve the selected date and time from the DatePicker and ComboBox
         LocalDate sdate = SDatePicker.getValue();
         String stime = String.valueOf(STimeDD.getValue());
         LocalDate edate = EDatePicker.getValue();
         String etime = String.valueOf(ETimeDD.getValue());
+
+        // Retrieve the form input values
+        String title = TitleTxt.getText();
+        String description = DescriptionTxt.getText();
+        String location = LocationTxt.getText();
+        String type = typeDD.getValue();
+
+        if (customerName == null || selectedUserId == null || contactName == null || sdate == null || stime == null || edate == null || etime == null || title.isEmpty() || description.isEmpty()|| location.isEmpty() || type == null) {
+            // show an error message or do something else
+            Alert emptyFields = new Alert(Alert.AlertType.ERROR);
+            emptyFields.setTitle("Error");
+            emptyFields.setHeaderText("Empty Fields");
+            emptyFields.setContentText("All fields are required. Please make sure all fields are filled out.");
+            emptyFields.showAndWait();
+            return;
+        }
+
+        // Convert the selected userId to an integer
+        int userId = Integer.parseInt(selectedUserId);
+
+        // take user selected Contact_Name and find the contact_ID FK so it can be add to appointments table.
+        int custId = CustomerDAO.getCustomerId(customerName);
+
+//        // Retrieve the list of appointments for the selected customer
+//        List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
+
+        // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
+        int contactId = ContactDAO.getContactId(contactName);
 
         // Convert the selected time to a LocalTime object
         LocalTime lt = LocalTime.parse(stime);
@@ -195,11 +221,48 @@ public class ModifyAppointmentController implements Initializable {
                 businessHours.showAndWait();
             } else {
 
-                // Retrieve the form input values
-                String title = TitleTxt.getText();
-                String description = DescriptionTxt.getText();
-                String location = LocationTxt.getText();
-                String type = typeDD.getValue();
+                // Retrieve the list of appointments for the selected customer
+                List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
+
+                int appointmentId = apptId; // replace this with the ID of the appointment being modified
+
+                // Loop through the appointments for the selected customer
+                for (Appointments appointment : appointments) {
+
+                    // Skip the overlap check for the appointment being modified
+                    if (appointment.getApptId() == appointmentId) {
+                        continue;
+                    }
+                    //Gets string Start and End from appointment list
+                    String sStart = appointment.getStart();
+
+                    String sEnd = appointment.getEnd();
+
+                    //Converts String to LocalDateTime type and formats
+                    LocalDateTime checkStart = LocalDateTime.parse(sStart, formatter);
+
+                    LocalDateTime checkEnd = LocalDateTime.parse(sEnd, formatter);
+
+                    // Create a ZonedDateTime object for the start time of the existing appointment using the UTC ZoneId
+                    ZonedDateTime checkAppointmentStart = ZonedDateTime.of(checkStart, utcZoneId);
+
+                    // Create a ZonedDateTime object for the end time of the existing appointment using the UTC ZoneId
+                    ZonedDateTime checkAppointmentEnd = ZonedDateTime.of(checkEnd, utcZoneId);
+
+                    if ((utcEZDT.isBefore(checkAppointmentEnd) && utcZDT.isAfter(checkAppointmentStart)) || utcZDT.isEqual(checkAppointmentStart) || utcEZDT.isEqual(checkAppointmentEnd)) {
+                        // There is an overlap, show an alert
+                        Alert overlap = new Alert(Alert.AlertType.ERROR);
+                        overlap.setTitle("Error");
+                        overlap.setHeaderText("Overlapping Appointments");
+                        overlap.setContentText("The customer already has an appointment scheduled during this time. Please reschedule for another time.");
+                        overlap.showAndWait();
+                        return;
+                    }
+                }
+
+
 
 
                 // Try to update the customer in the database

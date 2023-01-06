@@ -51,6 +51,9 @@ public class LoginController implements Initializable {
             String usernameInput = username.getText();
             String passwordInput = password.getText();
             int userId = UserDAO.validateUser(usernameInput, passwordInput);
+
+            Global.currentUserId = userId;
+
             ResourceBundle rb = ResourceBundle.getBundle("language", Locale.getDefault());
 
             if (userId > 0) {
@@ -81,6 +84,10 @@ public class LoginController implements Initializable {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             System.exit(0);
         }
+    }
+
+    public class Global {
+        public static int currentUserId;
     }
 
     @Override
