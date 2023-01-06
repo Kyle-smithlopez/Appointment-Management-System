@@ -101,7 +101,6 @@ public class ModifyAppointmentController implements Initializable {
 
         //        JDBC.openConnection();
 
-
         IdTxt.setText(String.valueOf(appointment.getApptId()));
         TitleTxt.setText(appointment.getTitle());
         DescriptionTxt.setText(appointment.getDescription());

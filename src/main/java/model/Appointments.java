@@ -14,12 +14,12 @@ public class Appointments {
 //    private Timestamp end;
     private String start;
     private String end;
-    public int custId;
-    public int userId;
-    public static int contactId;
-    public String custName;
-    public String userName;
-    public String contactName;
+    private int custId;
+    private int userId;
+    private static int contactId;
+    private String custName;
+    private String userName;
+    private String contactName;
 
 //    private ZonedDateTime start;
 //    private ZonedDateTime end;
@@ -174,5 +174,6 @@ public class Appointments {
         this.contactName = contactName;
     }
 
-
 }
+
+//Converted variables to private

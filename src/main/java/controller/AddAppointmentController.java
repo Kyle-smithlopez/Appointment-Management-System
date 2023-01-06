@@ -25,6 +25,7 @@ import java.time.*;
 import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.time.ZonedDateTime;
 
@@ -57,7 +58,7 @@ public class AddAppointmentController implements Initializable {
     Stage stage;
     Parent scene;
 
-        // May want to set up a way to populate only appointments within 8AM - 10PM EST.
+    // May want to set up a way to populate only appointments within 8AM - 10PM EST.
 //    private ObservableList<String> getAppointmentTimes() {
 //        ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
 //
@@ -96,8 +97,6 @@ public class AddAppointmentController implements Initializable {
         }
         return appointmentTimes;
     }
-
-
 
 
 //    @FXML
@@ -347,14 +346,13 @@ public class AddAppointmentController implements Initializable {
     @FXML
     public void OnActionSaveAppt(ActionEvent event) throws IOException, SQLException {
 
-
         // Retrieve the selected contactId from the combo box and convert it to an integer
         String customerName = customerDD.getValue();
         // take user selected Contact_Name and find the contact_ID FK so it can be add to appointments table.
         int custId = CustomerDAO.getCustomerId(customerName);
 
-//        // Retrieve the list of appointments for the selected customer
-//        List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
+        // Retrieve the list of appointments for the selected customer
+        List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
 
         // Retrieve the selected userId from the combo box and convert it to an integer
         String selectedUserId = userDD.getSelectionModel().getSelectedItem();
@@ -365,7 +363,6 @@ public class AddAppointmentController implements Initializable {
 
         // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
         int contactId = ContactDAO.getContactId(contactName);
-
 
         // Retrieve the selected date and time from the DatePicker and ComboBox
         LocalDate sdate = sDatePicker.getValue();
@@ -382,7 +379,6 @@ public class AddAppointmentController implements Initializable {
         // Create a ZoneId for local
         ZoneId myZoneId = ZoneId.systemDefault();
 
-
         // Combine the date and time into a LocalDateTime object
         LocalDateTime ldt = LocalDateTime.of(sdate, lt);
         LocalDateTime eldt = LocalDateTime.of(edate, elt);
@@ -396,10 +392,7 @@ public class AddAppointmentController implements Initializable {
         String start = utcZDT.format(DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss"));
         String end = utcEZDT.format(DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss"));
 
-//        String start = myZDT.format(DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss"));
-//        String end = myEZDT.format(DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss"));
-
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
 
         if (sdate.isAfter(edate)) {
             // end date is before start date, show an error message or do something else
@@ -422,7 +415,35 @@ public class AddAppointmentController implements Initializable {
                 businessHours.showAndWait();
             } else {
 
+                // Loop through the appointments for the selected customer
+                for (Appointments appointment: appointments) {
 
+                    //Gets string Start and End from appointment list
+                    String sStart = appointment.getStart();
+
+                    String sEnd = appointment.getEnd();
+
+                    //Converts String to LocalDateTime type and formats
+                    LocalDateTime checkStart = LocalDateTime.parse(sStart, formatter);
+
+                    LocalDateTime checkEnd = LocalDateTime.parse(sEnd, formatter);
+
+                    // Create a ZonedDateTime object for the start time of the existing appointment using the UTC ZoneId
+                    ZonedDateTime checkAppointmentStart = ZonedDateTime.of(checkStart, utcZoneId);
+
+                    // Create a ZonedDateTime object for the end time of the existing appointment using the UTC ZoneId
+                    ZonedDateTime checkAppointmentEnd = ZonedDateTime.of(checkEnd, utcZoneId);
+
+                    if ((utcEZDT.isBefore(checkAppointmentEnd) && utcZDT.isAfter(checkAppointmentStart)) || utcZDT.isEqual(checkAppointmentStart) || utcEZDT.isEqual(checkAppointmentEnd)) {
+                        // There is an overlap, show an alert
+                        Alert overlap = new Alert(Alert.AlertType.ERROR);
+                        overlap.setTitle("Error");
+                        overlap.setHeaderText("Overlapping Appointments");
+                        overlap.setContentText("The customer already has an appointment scheduled during this time. Please reschedule for another time.");
+                        overlap.showAndWait();
+                        return;
+                    }
+                }
                 // Retrieve the form input values
                 String title = titleTxt.getText();
                 String description = descriptionTxt.getText();
@@ -472,18 +493,20 @@ public class AddAppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> appointmentTimes = getAppointmentTimes();
 // Retrieve the list of appointments for a given customer
-//        int customerId = 1; // Replace with the customerId of the customer you want to retrieve appointments for
-//        List<Appointments> appointments = null;
-//        try {
-//            appointments = AppointmentsDAO.getAppointmentsForCustomer(customerId);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
+        int customerId = 2; // Replace with the customerId of the customer you want to retrieve appointments for
+        List<Appointments> appointments = null;
+        try {
+            appointments = AppointmentsDAO.getAppointmentsForCustomer(customerId);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
-//// Print the list of appointments
-//        for (Appointments appointment : appointments) {
-//            System.out.println(appointment);
-//        }
+        for (Appointments appointment : appointments) {
+            String start = appointment.getStart();
+            String end = appointment.getEnd();
+            System.out.println("Start: " + start + ", End: " + end);
+        }
+
         try {
             contactsDD.setItems(ContactDAO.getContacts());
             customerDD.setItems((CustomerDAO.getCustomers()));
