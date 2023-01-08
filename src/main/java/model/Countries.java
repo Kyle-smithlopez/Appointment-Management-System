@@ -1,10 +1,16 @@
 package model;
 
+/**
+ * Creates a model for Countries
+ */
 public class Countries {
 
     private int countryId;
     public String country;
 
+    /**
+     * Creates a constructor for the Countries class.
+     */
     public Countries(int countryId, String country) {
         this.countryId = countryId;
         this.country = country;

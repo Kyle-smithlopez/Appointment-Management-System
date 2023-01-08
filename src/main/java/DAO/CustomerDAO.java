@@ -9,8 +9,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The CustomerDAO class is used to access the Customers table.
+ */
 public abstract class CustomerDAO {
     //Create
+
+    /**
+     * The addCustomer method creates a new customer in the database.
+     */
     public static boolean addCustomer(String custName, String address, String postalCode, String Phone, int divisionId) throws SQLException {
         JDBC.openConnection();
         String sql = "INSERT INTO CUSTOMERS (Customer_Name, Address, Postal_Code, Phone, Division_ID) VALUES(?, ?, ?, ?, ?)";
@@ -24,7 +31,6 @@ public abstract class CustomerDAO {
         try {
             // Use executeUpdate to execute the INSERT statement
             int rowsAffected = ps.executeUpdate();
-            // Return true if the INSERT statement was successful (1 or more rows were affected)
             return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -36,6 +42,10 @@ public abstract class CustomerDAO {
     }
 
     //Deletion
+
+    /**
+     * The deleteCustomer method deletes a customer from the database.
+     */
     public static Boolean deleteCustomer(int custId) throws SQLException {
         JDBC.openConnection();
         String sql = "DELETE FROM CUSTOMERS WHERE CUSTOMER_ID = ?";
@@ -52,9 +62,9 @@ public abstract class CustomerDAO {
             return false;
         }
     }
+
     //Checks if Customer has an appointment.
     public static boolean hasAppointments(int customerId) throws SQLException {
-        // Open a connection to the database
         JDBC.openConnection();
         // Check if there are any appointments associated with the customer
         String sql = "SELECT COUNT(*) FROM appointments WHERE CUSTOMER_ID = ?";
@@ -65,14 +75,17 @@ public abstract class CustomerDAO {
         if (rs.next()) {
             count = rs.getInt(1);
         }
-        // Close the connection to the database
         JDBC.closeConnection();
-        // Return true if there are appointments associated with the customer, false otherwise
+        // Return true if there are appointments associated with the customer.
         return count > 0;
     }
 
 
     //Create
+
+    /**
+     * The updateCustomer method updates the selected customer in the database.
+     */
     public static boolean updateCustomer(int custId, String custName, String address, String postalCode, String phone, int divisionId) throws SQLException {
         String sql = "UPDATE CUSTOMERS SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Customer_ID = ?";
 
@@ -89,7 +102,6 @@ public abstract class CustomerDAO {
             // Use executeUpdate to execute the UPDATE statement
             int rowsAffected = ps.executeUpdate();
             JDBC.closeConnection();
-            // Return true if the UPDATE statement was successful (1 or more rows were affected)
             return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,9 +111,9 @@ public abstract class CustomerDAO {
         }
     }
 
-
-
-
+    /**
+     * The getCustomers method retrieves the customers name to populate the customers ComboBox.
+     */
     public static ObservableList<String> getCustomers() throws SQLException {
 
         ObservableList<String> allCustomers = FXCollections.observableArrayList();
@@ -115,13 +127,15 @@ public abstract class CustomerDAO {
 //            String custId = rs.getString("Customer_ID");
             int custId = rs.getInt("Customer_ID");
 //            allCustomers.add(name + " " + custId);
-
             allCustomers.add(name);
         }
         JDBC.closeConnection();
         return allCustomers;
     }
 
+    /**
+     * The getCustomerID method retrieves the customers ID.
+     */
     public static int getCustomerId(String custId) throws SQLException {
         int customerId = -1;
         JDBC.openConnection();
@@ -136,20 +150,16 @@ public abstract class CustomerDAO {
         return customerId;
     }
 
+    /**
+     * The getCustomerName method retrieves the customers name associated with the Customer ID.
+     */
     public static String getCustomerName(int customerId) throws SQLException {
         String sql = "SELECT CUSTOMER_NAME FROM CUSTOMERS WHERE CUSTOMER_ID = ?";
 
         try {
-            // Open a connection to the database
             JDBC.openConnection();
-
-            // Create a prepared statement
             PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-
-            // Set the parameters for the prepared statement
             ps.setInt(1, customerId);
-
-            // Execute the query
             ResultSet rs = ps.executeQuery();
 
             // If the result set has a row, retrieve the customer name
@@ -160,14 +170,16 @@ public abstract class CustomerDAO {
             System.out.println(e);
             throw e;
         } finally {
-            // Close the connection to the database
             JDBC.closeConnection();
         }
         // Return null if no customer was found with the given ID
         return null;
     }
 
-    public static ObservableList<Customers> getAllCustomers() throws SQLException, Exception {
+    /**
+     * The getAllCustomers method retrieves all customers in the database.
+     */
+    public static ObservableList<Customers> getAllCustomers() throws Exception {
         ObservableList<Customers> allCustomers = FXCollections.observableArrayList();
         JDBC.openConnection();
 

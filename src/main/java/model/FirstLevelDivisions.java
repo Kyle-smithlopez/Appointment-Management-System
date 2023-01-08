@@ -1,11 +1,16 @@
 package model;
 
+/**
+ * Creates a First Level Division Model.
+ */
 public class FirstLevelDivisions {
     private int divisionID;
     private String divisionName;
     private int countryId;
 
-
+    /**
+     * Creates a constructor for the First Level Divisions class.
+     */
     public FirstLevelDivisions(int divisionID, String divisionName, int countryId) {
         this.divisionID = divisionID;
         this.divisionName = divisionName;

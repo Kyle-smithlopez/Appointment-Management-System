@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/** The Modify Customer Controller allows the user to modify a customer. */
 public class ModifyCustomerController implements Initializable {
 
     @FXML
@@ -41,6 +42,7 @@ public class ModifyCustomerController implements Initializable {
     Stage stage;
     Parent scene;
 
+    /** Send Customer method retreives the data of the selected customer and updates the values in the appropriate fields. */
     public void sendCustomer(Customers customer) {
         customerIdTxt.setText(String.valueOf(customer.getCustomerId()));
         customerNameTxt.setText(customer.getCustomerName());
@@ -51,10 +53,9 @@ public class ModifyCustomerController implements Initializable {
         divisionDD.setValue(customer.getDivision());
     }
 
-
+    /** The Save Button saves the modified customer information. */
     @FXML
     public void OnActionSaveBtn(ActionEvent event) throws IOException, SQLException {
-
         // Retrieve the division value from the combo box
         String division = String.valueOf(divisionDD.getValue());
 
@@ -73,10 +74,6 @@ public class ModifyCustomerController implements Initializable {
         // Try to update the customer in the database
         boolean success = CustomerDAO.updateCustomer(custId, custName, address, postalCode, phone, divisionId);
         if (success) {
-            // Display message to user indicating successful update of customer
-            System.out.println("Customer updated successfully");
-
-            // Go back to the customers view
             stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             scene = FXMLLoader.load(getClass().getResource("/view/customers-view.fxml"));
             stage.setScene(new Scene(scene));
@@ -91,7 +88,7 @@ public class ModifyCustomerController implements Initializable {
         }
     }
 
-
+    /** The Cancel Button returns the user to the Customers View. */
     @FXML
     public void OnActionCancel(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -100,16 +97,21 @@ public class ModifyCustomerController implements Initializable {
         stage.show();
     }
 
+    /** The initialize method populates the table column data and includes Lambda expression. */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Sets the Country Combo Box
+        //Sets the Country Combo Box.
         try {
             countryDD.setItems(CountryDAO.getCountries());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        //Sets the Division Combo Box
-        //Lambda Expression
+        /**
+         * Lambda Expression: Sets the values of the division ComboBox based on the selected value of the country ComboBox.
+         * When the value of the country ComboBox changes, the lambda expression retrieves a list of filtered
+         * divisions from the database and sets the items of the division ComboBox to the list of filtered divisions.
+         * RUNTIME ERROR: Lambda Expression originally didn't populate the division ComboBox with the correct values.
+         */
         countryDD.valueProperty().addListener((obs, oldVal, newVal) -> {
             Optional.ofNullable(newVal).ifPresent(val -> {
                 divisionDD.setDisable(false);

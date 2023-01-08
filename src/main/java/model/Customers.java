@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Creates a customer model class.
+ */
 public class Customers {
 
     private Integer customerId = null;
@@ -11,6 +14,9 @@ public class Customers {
     private String country;
     public int divisionID;
 
+    /**
+     * Creates a constructor for the Customers class.
+     */
     public Customers(int customerId, String customerName, String customerAddress, String postalCode, String phone, int divisionID, String division, String country) {
         this.customerId = customerId;
         this.customerName = customerName;

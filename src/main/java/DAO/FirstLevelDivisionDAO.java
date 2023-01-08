@@ -9,8 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The FirstLevelDivisionDAO class is used to retrieve data from the first_level_divisions table.
+ */
 public class FirstLevelDivisionDAO {
 
+    /**
+     * The getFilteredDivisions method returns an ObservableList of first level divisions filtered by Country.
+     */
     public static ObservableList<String> getFilteredDivisions(String country) throws SQLException {
         ObservableList<String> filteredDivision = FXCollections.observableArrayList();
         JDBC.openConnection();
@@ -25,6 +31,9 @@ public class FirstLevelDivisionDAO {
         return filteredDivision;
     }
 
+    /**
+     * The getDivisionId method retrieves a division ID by the division.
+     */
     public static int getDivisionId(String division) throws SQLException {
         int divisionId = -1;
         JDBC.openConnection();
@@ -39,6 +48,10 @@ public class FirstLevelDivisionDAO {
         return divisionId;
     }
 
+    /**
+     * The getAll FirstLevelDivisions method retrieves all the divisions in the database.
+     */
+    // May not need ***
     public static ObservableList<FirstLevelDivisions> getAllFirstLevelDivisions() throws SQLException {
         ObservableList<FirstLevelDivisions> allDivisions = FXCollections.observableArrayList();
         JDBC.openConnection();

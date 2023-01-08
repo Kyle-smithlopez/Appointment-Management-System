@@ -25,6 +25,9 @@ import java.util.ResourceBundle;
 
 import static DAO.AppointmentsDAO.getAppointmentsWithinRange;
 
+/**
+ * The Appointments Controller creates the Appointments Menu.
+ */
 public class AppointmentsController implements Initializable {
 
     @FXML
@@ -63,6 +66,9 @@ public class AppointmentsController implements Initializable {
     Stage stage;
     Parent scene;
 
+    /**
+     * The refreshTableView method when called refreshes or repopulates the appointment table.
+     */
     public void refreshTableView() throws Exception {
         // Clear the current list of customers
         Appointments.clear();
@@ -80,7 +86,9 @@ public class AppointmentsController implements Initializable {
         apptTableView.setItems(Appointments);
     }
 
-
+    /**
+     * The Add Button event listener when clicked sends the user to the Add Appointment Controller.
+     */
     @FXML
     public void OnActionAddApptBtn(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -89,6 +97,9 @@ public class AppointmentsController implements Initializable {
         stage.show();
     }
 
+    /**
+     * The Modify Appointment button event listen when clicked sends the selected item data and user to the Modify Appointment controller.
+     */
     @FXML
     public void OnActionModifyApptBtn(ActionEvent event) throws IOException, SQLException {
         if (apptTableView.getSelectionModel().getSelectedItem() == null) {
@@ -111,10 +122,13 @@ public class AppointmentsController implements Initializable {
         }
     }
 
+    /**
+     * The Delete Appointment button event listener when clicked deletes the selected appointment from the database.
+     */
     @FXML
     public void OnActionDeleteApptBtn(ActionEvent actionEvent) throws Exception {
 
-        // Check if an appointment is selected in the table view
+        // Check if an appointment is selected in the table view.
         if (apptTableView.getSelectionModel().getSelectedItem() == null) {
             // Display warning message if no appointment is selected
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -129,18 +143,17 @@ public class AppointmentsController implements Initializable {
                 int appointmentId = apptTableView.getSelectionModel().getSelectedItem().getApptId();
                 String Type = apptTableView.getSelectionModel().getSelectedItem().getType();
 
-                // Try to delete the appointment from the database
+                // Try to delete the appointment from the database.
                 boolean success = AppointmentsDAO.deleteAppointment(appointmentId);
                 if (success) {
-                    // Display message to user indicating successful deletion of appointment
+                    // Display message to user indicating successful deletion of appointment.
                     System.out.println("Appointment deleted successfully");
                     Alert confirmation = new Alert(Alert.AlertType.INFORMATION);
                     confirmation.setTitle("Appointment Cancelled");
                     confirmation.setHeaderText("Appointment ID: " + appointmentId);
                     confirmation.setContentText("Appointment Type: " + Type);
                     confirmation.showAndWait();
-
-                    // Refresh the table view to reflect the changes
+                    // Refresh the table view to reflect the changes.
                     refreshTableView();
                 } else {
                     // Display error message to user
@@ -154,6 +167,9 @@ public class AppointmentsController implements Initializable {
         }
     }
 
+    /**
+     * The Back button event listener when clicked sends the user to the Main Menu.
+     */
     @FXML
     public void OnActionBackBtn(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -162,17 +178,26 @@ public class AppointmentsController implements Initializable {
         stage.show();
     }
 
+    /**
+     * The All Radio button refreshes the table with all the appointments.
+     */
     public void OnActionAllRB(ActionEvent event) throws Exception {
         refreshTableView();
 //        apptTableView.setItems(Appointments);
     }
 
+    /**
+     * The Week Radio button refreshes the table with appointments within the current week.
+     */
     public void OnActionWeekRB(ActionEvent event) throws Exception {
         refreshTableView();
         ObservableList<Appointments> filteredAppointments = getAppointmentsWithinRange(Appointments, ZonedDateTime.now().withZoneSameInstant(ZoneId.systemDefault()).toLocalDate().atStartOfDay(ZoneId.systemDefault()), ZonedDateTime.now().withZoneSameInstant(ZoneId.systemDefault()).plusDays(7).toLocalDate().atStartOfDay(ZoneId.systemDefault()));
         apptTableView.setItems(filteredAppointments);
     }
 
+    /**
+     * The Month Radio button refreshes the table with appointments within the current month.
+     */
     public void OnActionMonthRB(ActionEvent event) throws Exception {
         refreshTableView();
         ObservableList<Appointments> filteredAppointments = getAppointmentsWithinRange(Appointments, ZonedDateTime.now().withZoneSameInstant(ZoneId.systemDefault()).toLocalDate().atStartOfDay(ZoneId.systemDefault()), ZonedDateTime.now().withZoneSameInstant(ZoneId.systemDefault()).plusMonths(1).toLocalDate().atStartOfDay(ZoneId.systemDefault()));
@@ -182,9 +207,11 @@ public class AppointmentsController implements Initializable {
 
     ObservableList<Appointments> Appointments = FXCollections.observableArrayList();
 
+    /** The initialize method populates the table column data. */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        // Set the table view columns to the appropriate data.
         apptIdCol.setCellValueFactory(new PropertyValueFactory<>("apptId"));
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));

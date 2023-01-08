@@ -1,19 +1,16 @@
 package model;
 
+/**
+ * Creates a User Model class.
+ */
 public class User {
     private int userId;
     private String userName;
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     private String password;
 
+    /**
+     * Creates a User constructor.
+     */
     public User(int userId, String userName, String password) {
         this.userId = userId;
         this.userName = userName;
@@ -34,5 +31,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

@@ -9,8 +9,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The ContactDAO class is used to access the Contacts table in the database.
+ */
 public abstract class ContactDAO {
+    //May not be needed *************************************************************
 
+    /**
+     * This method is used to get all contacts in the table.
+     */
     public static ObservableList<Contacts> getAllContacts() {
         ObservableList<Contacts> allContacts = FXCollections.observableArrayList();
         JDBC.openConnection();
@@ -32,6 +39,9 @@ public abstract class ContactDAO {
         return allContacts;
     }
 
+    /**
+     * This method is used to get contacts from the table to populate the Contacts ComboBox.
+     */
     public static ObservableList<String> getContacts() throws SQLException {
 
         ObservableList<String> allContacts = FXCollections.observableArrayList();
@@ -39,7 +49,6 @@ public abstract class ContactDAO {
         JDBC.openConnection();
         Query.makeQuery(sql);
         ResultSet rs = Query.getResult();
-
         while (rs.next()) {
             int id = rs.getInt("Contact_ID");
 //            String id = rs.getString("Contact_ID");
@@ -51,6 +60,9 @@ public abstract class ContactDAO {
         return allContacts;
     }
 
+    /**
+     * This method is used to get the contact ID associated with the contact name from the table.
+     */
     public static int getContactId(String contact) throws SQLException {
         int contactId = -1;
         JDBC.openConnection();

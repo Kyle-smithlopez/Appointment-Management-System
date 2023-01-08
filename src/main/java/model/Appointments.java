@@ -1,17 +1,15 @@
 package model;
 
-import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+/** Created Appointment model. */
 public class Appointments {
     private int apptId;
     private String title;
     private String description;
     private String location;
     private String type;
-//    private Timestamp start;
-//    private Timestamp end;
     private String start;
     private String end;
     private int custId;
@@ -21,6 +19,7 @@ public class Appointments {
     private String userName;
     private String contactName;
 
+    /** Created a constructor for Appointments. */
     public Appointments(int apptId, String title, String description, String location, String type, String start, String end, int custId, int userId, int contactId, String contactName) {
 
         this.apptId = apptId;
@@ -36,35 +35,17 @@ public class Appointments {
         this.contactName = contactName;
     }
 
+    /** Created functions to Format time to Local, EST and UTC time zones. */
     public static DateTimeFormatter getLocalDateTimeFormatter() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
     }
-
 
     public static DateTimeFormatter getESTDateTimeFormatter() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("America/New_York"));
     }
 
-
     public static DateTimeFormatter getUTCDateTimeFormatter() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.of("UTC"));
-    }
-
-
-    public void setStart(String start) {
-        this.start = start;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
-    }
-
-    public String getStart() {
-        return start;
-    }
-
-    public String getEnd() {
-        return end;
     }
 
     public int getApptId() {
@@ -107,22 +88,6 @@ public class Appointments {
         this.type = type;
     }
 
-//    public Timestamp getStart() {
-//        return start;
-//    }
-//
-//    public void setStart(Timestamp start) {
-//        this.start = start;
-//    }
-//
-//    public Timestamp getEnd() {
-//        return end;
-//    }
-//
-//    public void setEnd(Timestamp end) {
-//        this.end = end;
-//    }
-
     public int getCustId() {
         return custId;
     }
@@ -139,7 +104,7 @@ public class Appointments {
         this.userId = userId;
     }
 
-    public static int getContactId() {
+    public int getContactId() {
         return contactId;
     }
 
@@ -171,6 +136,19 @@ public class Appointments {
         this.contactName = contactName;
     }
 
-}
+    public String getStart() {
+        return start;
+    }
 
-//Converted variables to private
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+}

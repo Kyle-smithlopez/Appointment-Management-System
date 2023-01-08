@@ -2,8 +2,10 @@ package helper;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
+/**
+ * The JDBC class is used to connect to the database.
+ */
 public abstract class JDBC {
 
     private static final String protocol = "jdbc";
@@ -16,30 +18,28 @@ public abstract class JDBC {
     private static String password = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
-    public static void openConnection()
-    {
+    /**
+     * The openConnection method opens a connection to the database.
+     */
+    public static void openConnection() {
         try {
             Class.forName(driver); // Locate Driver
             connection = DriverManager.getConnection(jdbcUrl, userName, password); // Reference Connection object
             System.out.println("Connection successful!");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("Error:" + e.getMessage());
         }
     }
 
+    /**
+     * The closeConnection method closes the connection to the database.
+     */
     public static void closeConnection() {
         try {
             connection.close();
             System.out.println("Connection closed!");
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("Error:" + e.getMessage());
         }
     }
-//    public static Connection dbCursor() {
-//        return connection;
-//    }
 }

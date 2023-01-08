@@ -24,6 +24,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * The Modify Appointment controller pulls up the selected appointment information to modify.
+ */
 public class ModifyAppointmentController implements Initializable {
     @FXML
     public TextField TitleTxt;
@@ -51,21 +54,9 @@ public class ModifyAppointmentController implements Initializable {
     Stage stage;
     Parent scene;
 
-//    private ObservableList<String> getAppointmentTimes() {
-//        ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
-//
-//        LocalTime firstAppointment = LocalTime.MIN.plusHours(8);
-//        LocalTime lastAppointment = LocalTime.MAX.minusHours(4);
-//
-//        if (!firstAppointment.equals(0) || !lastAppointment.equals(0)) {
-//            while (firstAppointment.isBefore(lastAppointment)) {
-//                appointmentTimes.add(String.valueOf(firstAppointment));
-//                firstAppointment = firstAppointment.plusMinutes(15);
-//            }
-//        }
-//        return appointmentTimes;
-//    }
-
+    /**
+     * This code returns an ObservableList of appointment times between 8AM and 10PM EST converted to local time spread out in 15 minute increments.
+     */
     private ObservableList<LocalTime> getAppointmentTimes() {
         ObservableList<LocalTime> appointmentTimes = FXCollections.observableArrayList();
 
@@ -81,6 +72,9 @@ public class ModifyAppointmentController implements Initializable {
         return appointmentTimes;
     }
 
+    /**
+     * This method retrieves the selected appointments data and populates it in the appropriate fields.
+     */
     public void sendAppointment(Appointments appointment) throws SQLException {
 
         DateTimeFormatter formatter = Appointments.getLocalDateTimeFormatter();
@@ -99,8 +93,6 @@ public class ModifyAppointmentController implements Initializable {
         LocalDate sDate = localStartZDT.toLocalDate();
         LocalTime eTime = localEndZDT.toLocalTime();
         LocalDate eDate = localEndZDT.toLocalDate();
-
-        //        JDBC.openConnection();
 
         IdTxt.setText(String.valueOf(appointment.getApptId()));
         TitleTxt.setText(appointment.getTitle());
@@ -122,25 +114,26 @@ public class ModifyAppointmentController implements Initializable {
         } catch (SQLException e) {
             // Handle the exception
         }
-//        JDBC.closeConnection();
     }
 
 
-    //    Commented out as I am converting the Timestamp to string 1/4/23
+    /**
+     * The save button saves the modified appointment to the database and returns to the main screen.
+     * RUNTIME ERROR: The save button was not saving the modified appointment to the database. I had to change the setApptId to setApptId(Integer.parseInt(IdTxt.getText())) to get the appointment id to save.
+     */
     @FXML
     public void OnActionSaveAppt(ActionEvent event) throws IOException, SQLException {
 
-        // Retrieve the customerId from the text field
+        // Retrieve the appointment Id from the text field
         int apptId = Integer.parseInt(IdTxt.getText());
 
-
-        // Retrieve the selected contactId from the combo box and convert it to an integer
+        // Retrieve the selected Customer name.
         String customerName = CustomerDD.getValue();
 
-        // Retrieve the selected userId from the combo box and convert it to an integer
+        // Retrieve the selected userId from the combo box.
         String selectedUserId = UserDD.getSelectionModel().getSelectedItem();
 
-        // Retrieve the selected contactId from the combo box and convert it to an integer
+        // Retrieve the selected contact name from the combo box.
         String contactName = ContactDD.getValue();
 
         // Retrieve the selected date and time from the DatePicker and ComboBox
@@ -155,7 +148,8 @@ public class ModifyAppointmentController implements Initializable {
         String location = LocationTxt.getText();
         String type = typeDD.getValue();
 
-        if (customerName == null || selectedUserId == null || contactName == null || sdate == null || stime == null || edate == null || etime == null || title.isEmpty() || description.isEmpty()|| location.isEmpty() || type == null) {
+        // Validates that fields are not empty.
+        if (customerName == null || selectedUserId == null || contactName == null || sdate == null || stime == null || edate == null || etime == null || title.isEmpty() || description.isEmpty() || location.isEmpty() || type == null) {
             // show an error message or do something else
             Alert emptyFields = new Alert(Alert.AlertType.ERROR);
             emptyFields.setTitle("Error");
@@ -168,26 +162,22 @@ public class ModifyAppointmentController implements Initializable {
         // Convert the selected userId to an integer
         int userId = Integer.parseInt(selectedUserId);
 
-        // take user selected Contact_Name and find the contact_ID FK so it can be add to appointments table.
+        // Retrieves the customer Id from the database associated with the customer name.
         int custId = CustomerDAO.getCustomerId(customerName);
 
-//        // Retrieve the list of appointments for the selected customer
-//        List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
-
-        // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
+        // Retrieves the contact ID from the database associated with the contacts name.
         int contactId = ContactDAO.getContactId(contactName);
 
-        // Convert the selected time to a LocalTime object
+        // Convert the selected time to a LocalTime object.
         LocalTime lt = LocalTime.parse(stime);
         LocalTime elt = LocalTime.parse(etime);
 
-        // Create a ZoneId for UTC
+        // Create a ZoneId for UTC.
         ZoneId utcZoneId = ZoneId.of("UTC", ZoneId.SHORT_IDS);
-        // Create a ZoneId for local
+        // Create a ZoneId for local.
         ZoneId myZoneId = ZoneId.systemDefault();
 
-
-        // Combine the date and time into a LocalDateTime object
+        // Combine the date and time into a LocalDateTime object.
         LocalDateTime ldt = LocalDateTime.of(sdate, lt);
         LocalDateTime eldt = LocalDateTime.of(edate, elt);
 
@@ -197,36 +187,36 @@ public class ModifyAppointmentController implements Initializable {
         ZonedDateTime utcZDT = ZonedDateTime.ofInstant(myZDT.toInstant(), utcZoneId);
         ZonedDateTime utcEZDT = ZonedDateTime.ofInstant(myEZDT.toInstant(), utcZoneId);
 
-        String start = utcZDT.format(DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss"));
-        String end = utcEZDT.format(DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss"));
+        String start = utcZDT.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String end = utcEZDT.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
+        // Retrieve the list of appointments for the selected customer
+        List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
+
+        // Validates that the end date is not before the start date.
         if (sdate.isAfter(edate)) {
-            // end date is before start date, show an error message or do something else
             Alert invalidDate = new Alert(Alert.AlertType.ERROR);
             invalidDate.setTitle("Error");
             invalidDate.setHeaderText("Invalid Date Range");
             invalidDate.setContentText("End date must be on the same day or after the start date.");
             invalidDate.showAndWait();
         } else {
+            //Converts time to EST.
             ZoneId estZoneId = ZoneId.of("EST", ZoneId.SHORT_IDS);
             ZonedDateTime estStartTime = ldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(estZoneId);
             ZonedDateTime estEndTime = eldt.atZone(ZoneId.systemDefault()).withZoneSameInstant(estZoneId);
 
             if (estStartTime.toLocalTime().isBefore(LocalTime.of(8, 0)) || estStartTime.toLocalTime().isAfter(LocalTime.of(22, 0)) || estEndTime.toLocalTime().isBefore(LocalTime.of(8, 0)) || estEndTime.toLocalTime().isAfter(LocalTime.of(22, 0)) || estEndTime.toLocalTime().isBefore(estStartTime.toLocalTime())) {
-                // start time is invalid, show an error message or do something else
                 Alert businessHours = new Alert(Alert.AlertType.ERROR);
                 businessHours.setTitle("Error");
                 businessHours.setHeaderText("Invalid Time Range");
                 businessHours.setContentText("Start and end times must be during business hours between 8:00 EST and 22:00 EST and the end time must be after the start time.");
                 businessHours.showAndWait();
             } else {
-
-                // Retrieve the list of appointments for the selected customer
-                List<Appointments> appointments = AppointmentsDAO.getAppointmentsForCustomer(custId);
-
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault());
 
-                int appointmentId = apptId; // replace this with the ID of the appointment being modified
+                // Replace this with the ID of the appointment being modified
+                int appointmentId = apptId;
 
                 // Loop through the appointments for the selected customer
                 for (Appointments appointment : appointments) {
@@ -235,20 +225,17 @@ public class ModifyAppointmentController implements Initializable {
                     if (appointment.getApptId() == appointmentId) {
                         continue;
                     }
-                    //Gets string Start and End from appointment list
+                    // Gets string Start and End from appointment list
                     String sStart = appointment.getStart();
 
                     String sEnd = appointment.getEnd();
 
-                    //Converts String to LocalDateTime type and formats
+                    // Converts String to LocalDateTime type and formats
                     LocalDateTime checkStart = LocalDateTime.parse(sStart, formatter);
-
                     LocalDateTime checkEnd = LocalDateTime.parse(sEnd, formatter);
 
-                    // Create a ZonedDateTime object for the start time of the existing appointment using the UTC ZoneId
+                    // Create a ZonedDateTime object for the start and end time of the existing appointment using the UTC ZoneId
                     ZonedDateTime checkAppointmentStart = ZonedDateTime.of(checkStart, utcZoneId);
-
-                    // Create a ZonedDateTime object for the end time of the existing appointment using the UTC ZoneId
                     ZonedDateTime checkAppointmentEnd = ZonedDateTime.of(checkEnd, utcZoneId);
 
                     if ((utcEZDT.isBefore(checkAppointmentEnd) && utcZDT.isAfter(checkAppointmentStart)) || utcZDT.isEqual(checkAppointmentStart) || utcEZDT.isEqual(checkAppointmentEnd)) {
@@ -261,17 +248,9 @@ public class ModifyAppointmentController implements Initializable {
                         return;
                     }
                 }
-
-
-
-
-                // Try to update the customer in the database
+                // Try to update the customer in the database.
                 boolean success = AppointmentsDAO.updateAppointment(apptId, title, description, location, type, start, end, custId, userId, contactId);
                 if (success) {
-                    // Display message to user indicating successful update of customer
-                    System.out.println("Customer updated successfully");
-
-                    // Go back to the customers view
                     stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
                     scene = FXMLLoader.load(getClass().getResource("/view/appointments-view.fxml"));
                     stage.setScene(new Scene(scene));
@@ -288,6 +267,13 @@ public class ModifyAppointmentController implements Initializable {
         }
     }
 
+    /**
+     * This method is called when the user clicks the cancel button. It returns the user to the
+     * appointments view.
+     *
+     * @param event The event that triggered the method.
+     * @throws IOException
+     */
     @FXML
     public void OnActionCancel(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -296,6 +282,7 @@ public class ModifyAppointmentController implements Initializable {
         stage.show();
     }
 
+    /** The initialize method populates the ComboBoxes. */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<LocalTime> appointmentTimes = getAppointmentTimes();
@@ -311,7 +298,3 @@ public class ModifyAppointmentController implements Initializable {
         }
     }
 }
-
-
-//Made changes to ComboBox from String to LocalTimes -
-//  -Changed ComboBox, getAppointmentTimes and Initialize list.

@@ -29,24 +29,24 @@
                   <Label text="Description" GridPane.rowIndex="3" />
                   <Label text="Contact" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                   <Label text="Location" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                  <TextField fx:id="titleTxt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="typeDD" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField fx:id="descriptionTxt" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="titleText" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="typeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="descriptionText" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Appointment ID" />
-                  <TextField fx:id="apptIdTxt" disable="true" promptText="Auto-Generated" GridPane.columnIndex="1" />
+                  <TextField fx:id="apptIdText" disable="true" promptText="Auto-Generated" GridPane.columnIndex="1" />
                   <Label text="Start Date" GridPane.rowIndex="4" />
                   <Label text="Start Time" GridPane.rowIndex="5" />
                   <Label text="End Date" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                   <Label text="End Time" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
                   <Label text="Customer" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-                  <DatePicker fx:id="sDatePicker" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <ComboBox fx:id="startDD" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <ComboBox fx:id="userDD" prefWidth="150.0" GridPane.columnIndex="3" />
-                  <ComboBox fx:id="contactsDD" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <TextField fx:id="locationTxt" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                  <ComboBox fx:id="customerDD" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                  <DatePicker fx:id="eDatePicker" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                  <ComboBox fx:id="endDD" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                  <DatePicker fx:id="startDatePicker" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <ComboBox fx:id="startComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <ComboBox fx:id="userComboBox" prefWidth="150.0" GridPane.columnIndex="3" />
+                  <ComboBox fx:id="contactsCombBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <TextField fx:id="locationText" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="customerComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <DatePicker fx:id="endDatePicker" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                  <ComboBox fx:id="endComboBox" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                   <Label text="User" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
                </children>
             </GridPane>

@@ -8,8 +8,14 @@ import model.Countries;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * The CountryDAO class is used to access the Country table in the database.
+ */
 public abstract class CountryDAO {
 
+    /**
+     * This method returns all countries in the database.
+     */
     public static ObservableList<Countries> getAllCountries() {
         ObservableList<Countries> allCountries = FXCollections.observableArrayList();
         JDBC.openConnection();
@@ -31,6 +37,9 @@ public abstract class CountryDAO {
         return allCountries;
     }
 
+    /**
+     * This method returns a country string.
+     */
     public static ObservableList<String> getCountries() throws SQLException {
 
         ObservableList<String> allCountries = FXCollections.observableArrayList();

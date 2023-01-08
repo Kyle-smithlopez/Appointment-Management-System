@@ -8,8 +8,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/*** The UserDAO class is used to access the User table in the database. */
 public class UserDAO {
 
+    /**
+     * The validateUser method validates the user.
+     */
     public static int validateUser(String userName, String password) throws SQLException {
         String sql = "SELECT * FROM users WHERE user_name = ? AND password = ?";
         JDBC.openConnection();
@@ -28,6 +32,9 @@ public class UserDAO {
         }
     }
 
+    /**
+     * The getUsers method retrieves the Users ID.
+     */
     public static ObservableList<String> getUsers() throws SQLException {
 
         ObservableList<String> allUsers = FXCollections.observableArrayList();
@@ -38,15 +45,14 @@ public class UserDAO {
 
         while (rs.next()) {
             int id = rs.getInt("User_ID");
-//            String id = rs.getString("User_ID");
             String name = rs.getString("User_Name");
-//            allUsers.add(name + " [" + id + "]");
             allUsers.add(String.valueOf(id));
         }
         JDBC.closeConnection();
         return allUsers;
     }
 
+    // May not need.
     public static int getUserId(String userName) throws SQLException {
         int userId = -1;
         JDBC.openConnection();

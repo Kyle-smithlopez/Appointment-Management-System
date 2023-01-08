@@ -1,11 +1,17 @@
 package model;
 
+/**
+ * Creates a model for Contacts.
+ */
 public class Contacts {
 
     private int contactId;
     private String contactName;
     private String email;
 
+    /**
+     * Creates a constructor for the Contacts class.
+     */
     public Contacts(int contactId, String contactName) {
         this.contactId = contactId;
         this.contactName = contactName;

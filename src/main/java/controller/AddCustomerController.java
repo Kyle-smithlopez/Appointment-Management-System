@@ -21,6 +21,9 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * This class creates the add customer controller.
+ */
 public class AddCustomerController implements Initializable {
 
     @FXML
@@ -38,38 +41,34 @@ public class AddCustomerController implements Initializable {
     @FXML
     public ComboBox<String> divisionDD;
 
-
     Stage stage;
     Parent scene;
 
-
-    //Chat
+    /**
+     * This method saves a new customer when the Save button is clicked.
+     */
     @FXML
     public void OnActionSaveBtn(ActionEvent event) throws IOException, SQLException {
-        // Retrieve the division value from the combo box
+        // Retrieve the division value from the combo box.
         String division = divisionDD.getValue();
-
-        // Retrieve the divisionId using the division value
+        // Retrieve the divisionId using the division value.
         int divisionId = FirstLevelDivisionDAO.getDivisionId(division);
 
-        // Open a connection to the database
-        // Try to add a customer to the database
+        // If success, adds the customer to the database.
         String custName = nameTxt.getText();
         String address = addressTxt.getText();
         String postalCode = postalCodeTxt.getText();
         String phone = phoneTxt.getText();
         boolean success = CustomerDAO.addCustomer(custName, address, postalCode, phone, divisionId);
         if (success) {
-            // Display message to user indicating successful addition of customer
-            System.out.println("Customer added successfully");
+            // Display message to user indicating successful addition of customer. *May or may not want to add confirmation alert.
 
             stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             scene = FXMLLoader.load(getClass().getResource("/view/customers-view.fxml"));
             stage.setScene(new Scene(scene));
             stage.show();
         } else {
-            // Display error message to user
-            System.out.println("Error adding customer");
+            // Display error message to user indicating unsuccessful addition of customer.
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setContentText("Please enter a valid value for each Text Field.");
@@ -77,7 +76,9 @@ public class AddCustomerController implements Initializable {
         }
     }
 
-
+    /**
+     * This method cancels the addition of a new customer when the Cancel button is clicked.
+     */
     @FXML
     public void OnActionCancel(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -86,17 +87,22 @@ public class AddCustomerController implements Initializable {
         stage.show();
     }
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Sets the Country Combo Box
+        //  Sets the Country Combo Box.
         try {
             countryDD.setItems(CountryDAO.getCountries());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        //Sets the Division Combo Box
+
         //Lambda Expression
+        /**
+         * Lambda Expression: Sets the values of the division ComboBox based on the selected value of the country ComboBox.
+         * When the value of the country ComboBox changes, the lambda expression retrieves a list of filtered
+         * divisions from the database and sets the items of the division ComboBox to the list of filtered divisions.
+         * RUNTIME ERROR: Lambda Expression originally didn't populate the division ComboBox with the correct values.
+         */
         countryDD.valueProperty().addListener((obs, oldVal, newVal) -> {
             Optional.ofNullable(newVal).ifPresent(val -> {
                 divisionDD.setDisable(false);

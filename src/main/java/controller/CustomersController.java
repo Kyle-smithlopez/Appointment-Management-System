@@ -21,6 +21,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * The Customers Controller creates the Customers Menu.
+ */
 public class CustomersController implements Initializable {
 
     @FXML
@@ -43,6 +46,9 @@ public class CustomersController implements Initializable {
     Stage stage;
     Parent scene;
 
+    /**
+     * The refreshTableView method when called refreshes or repopulates the appointment table.
+     */
     public void refreshTableView() throws Exception {
         // Clear the current list of customers
         Customers.clear();
@@ -60,7 +66,9 @@ public class CustomersController implements Initializable {
         custTableView.setItems(Customers);
     }
 
-
+    /**
+     * The Add customer button redirects the user to the Add Customer Controller.
+     */
     @FXML
     public void OnActionAddCustBtn(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -69,6 +77,9 @@ public class CustomersController implements Initializable {
         stage.show();
     }
 
+    /**
+     * The Modify customer button redirects the user to the Modify Customer Controller.
+     */
     @FXML
     public void OnActionModifyCustBtn(ActionEvent event) throws IOException {
 
@@ -93,17 +104,19 @@ public class CustomersController implements Initializable {
         }
     }
 
+    /**
+     * The Delete customer button deletes the selected customer.
+     */
     @FXML
     public void OnActionDeleteCustBtn(ActionEvent event) throws Exception {
-        // Check if a customer is selected in the table view
+        // Check if a customer is selected in the table view.
         if (custTableView.getSelectionModel().getSelectedItem() == null) {
-            // Display warning message if no customer is selected
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning Dialog");
             alert.setContentText("Error: No Customer Selected");
             alert.showAndWait();
         } else {
-            // Get the selected customer
+            // Get the selected customer.
             Customers selectedCustomer = custTableView.getSelectionModel().getSelectedItem();
 
             // Check if there are any appointments associated with the customer
@@ -117,20 +130,17 @@ public class CustomersController implements Initializable {
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.get() == ButtonType.OK) {
-                    // Open a connection to the database
+                    // Open a connection to the database.
                     JDBC.openConnection();
-
-                    // Delete the customer from the database
+                    // Delete the customer from the database.
                     CustomerDAO.deleteCustomer(selectedCustomer.getCustomerId());
-
-                    // Close the connection to the database
+                    // Close the connection to the database.
                     JDBC.closeConnection();
-
-                    // Refresh the table view
+                    // Refresh the table view.
                     refreshTableView();
                 }
             } else {
-                // If there are appointments associated with the customer, display an error message
+                // If there are appointments associated with the customer, display an error message.
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Dialog");
                 alert.setContentText("Error: Cannot delete customer because there are appointments associated with them.");
@@ -139,6 +149,9 @@ public class CustomersController implements Initializable {
         }
     }
 
+    /**
+     * The Back button redirects the user to the Main Menu.
+     */
     @FXML
     public void OnActionBackBtn(ActionEvent event) throws IOException {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -149,10 +162,11 @@ public class CustomersController implements Initializable {
 
     ObservableList<Customers> Customers = FXCollections.observableArrayList();
 
+    /** The initialize method populates the table column data. */
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        // Set the cell value factories for the table view columns.
         custIdCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
         nameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
