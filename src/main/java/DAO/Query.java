@@ -23,7 +23,7 @@ public class Query {
         query = q;
         try {
             stmt = connection.createStatement();
-            // determine query execution
+            // Determine query execution
             if (query.toLowerCase().startsWith("select"))
                 result = stmt.executeQuery(q);
             if (query.toLowerCase().startsWith("delete") || query.toLowerCase().startsWith("insert") || query.toLowerCase().startsWith("update"))

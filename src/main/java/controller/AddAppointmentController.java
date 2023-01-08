@@ -88,7 +88,6 @@ public class AddAppointmentController implements Initializable {
      * This method validates and saves the new appointment when the save button is clicked.
      * RUNTIME ERROR: The appointment time was not saving correctly. Issue was due to the time zone conversion.
      */
-    //Updated Version - Added validation check for empty values.
     @FXML
     public void OnActionSaveAppt(ActionEvent event) throws SQLException {
 

@@ -47,7 +47,6 @@ public abstract class AppointmentsDAO {
         try {
             // Use executeUpdate to execute the INSERT statement
             int rowsAffected = ps.executeUpdate();
-            // Return true if the INSERT statement was successful (1 or more rows were affected)
             return rowsAffected > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -166,21 +165,6 @@ public abstract class AppointmentsDAO {
         JDBC.closeConnection();
         return appointments;
     }
-
-//     MAY NOT NEED - Commented out 1/3/2023 ********
-//    public static String getContactName(int contactId) throws SQLException {
-//        JDBC.openConnection();
-//        String sql = "SELECT contact FROM contacts WHERE contact_id = ?";
-//        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-//        ps.setInt(1, contactId);
-//        ResultSet rs = ps.executeQuery();
-//        String contactName = null;
-//        if (rs.next()) {
-//            contactName = rs.getString("contact");
-//        }
-//        JDBC.closeConnection();
-//        return contactName;
-//    }
 
     /**
      * The getAppointmentsWithinRange filters appointment by current week or current month.

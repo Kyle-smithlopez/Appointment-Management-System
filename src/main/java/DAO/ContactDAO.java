@@ -13,8 +13,6 @@ import java.sql.SQLException;
  * The ContactDAO class is used to access the Contacts table in the database.
  */
 public abstract class ContactDAO {
-    //May not be needed *************************************************************
-
     /**
      * This method is used to get all contacts in the table.
      */
